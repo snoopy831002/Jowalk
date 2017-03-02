@@ -13,9 +13,11 @@ import {
   TouchableOpacity,
   Text,
   Modal,
+  TouchableHighlight,
   View
 } from 'react-native';
 import Sketch from 'react-native-sketch';
+import renderIf from './js/renderif.js';
 
 export default class Jowalk039 extends Component {
    constructor(props) {
@@ -32,12 +34,11 @@ export default class Jowalk039 extends Component {
 
   state = {
     encodedSignature: null,
-    //
     animationType: 'fade',
     modalVisible: false,
-    transparent: false,
+    transparent: true,
     selectedSupportedOrientation: 1,
-    //
+    pairingVisibilityStatus: false,
   };
 
   _setModalVisible = (visible) => {
@@ -51,6 +52,12 @@ export default class Jowalk039 extends Component {
   _toggleTransparent = () => {
     this.setState({transparent: !this.state.transparent});
   };
+
+  pairingToggleStatus(){
+    this.setState({
+      status:!this.state.pairingVisibilityStatus
+    });
+  }
 
   /**
    * Clear / reset the drawing
@@ -94,7 +101,6 @@ export default class Jowalk039 extends Component {
   _onStartShouldSetResponder(e) {
     return true;
   }
-  //
 
   handlePressIn(e){
     coordinates.StartXcoordinate = e.nativeEvent.locationX ;
@@ -139,44 +145,36 @@ export default class Jowalk039 extends Component {
           supportedOrientations={['landscape']}
           >
           <View style={[styles.modalContainer, modalBackgroundStyle]}>
-            <View style={[styles.innerContainer, innerContainerTransparentStyle]}>
-              <Text>AAAAAAAAAAAAAAA</Text>
-              <Text>BBBBB</Text>
-              <Button
-                title="Close"
-                onPress={this._setModalVisible.bind(this, false)}
-                style={styles.modalButton}>
-              </Button>
+            <View style={[styles.pairing, innerContainerTransparentStyle]}>
+              <Text>正在配對路徑與獎勵</Text>
             </View>
+            {renderIf(this.state.pairingVisibilityStatus)(
+              <View style={[styles.pairing, innerContainerTransparentStyle]}>
+                <Text>拉霸喔～～～</Text>
+              </View>
+            )}
           </View>
         </Modal>
-          <Sketch
-            onStartShouldSetResponder={this._onStartShouldSetResponder}
-            onMoveShouldSetResponder={this._onMoveShouldSetResponder}
-            onResponderStart={this.handlePressIn}
-            onResponderMove={this.handleOnMove}
-            onResponderRelease={this.handlePressOut}
-            fillColor="#f5f5f5"
-            strokeColor="#111111"
-            strokeThickness={2}
-            onReset={this.onReset}
-            onUpdate={this.onUpdate}
-            ref={(sketch) => { this.sketch = sketch; }}
-            style={styles.sketch}
-          />
-        <Button
-          onPress={this.clear}
-          title="Clear drawing"
+        <Sketch
+          onStartShouldSetResponder={this._onStartShouldSetResponder}
+          onMoveShouldSetResponder={this._onMoveShouldSetResponder}
+          onResponderStart={this.handlePressIn}
+          onResponderMove={this.handleOnMove}
+          onResponderRelease={this.handlePressOut}
+          fillColor="#f5f5f5"
+          strokeColor="#111111"
+          strokeThickness={2}
+          onReset={this.onReset}
+          onUpdate={this.onUpdate}
+          ref={(sketch) => { this.sketch = sketch; }}
+          style={styles.sketch}
         />
-        <Button 
-          onPress={this._setModalVisible.bind(this, true)}
-          title="Present"
-        />
-        <Button
-          disabled={!this.state.encodedSignature}
-          onPress={this.onSave}
-          title="Save drawing"
-        />
+        <TouchableHighlight 
+          style={styles.addButton}
+          underlayColor='#ff7043' 
+          onPress={this._setModalVisible.bind(this, true)}>
+          <Text style={{color: 'white'}}>結束旅程</Text>
+        </TouchableHighlight>
       </View>
     );
   }
@@ -191,6 +189,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+addButton: {
+    backgroundColor: '#ff5722',
+    borderColor: '#ff5722',
+    borderWidth: 1,
+    height: 50,
+    width: 150,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: 20,
+    right: (Dimensions.get("window").height)*0.5+50,
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 0
+    }
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -199,11 +217,21 @@ const styles = StyleSheet.create({
   sketch: {
     flexGrow: 1,
     height: Dimensions.get("window").height-100, // Height needed; Default: 200px
+    zIndex: 0,
+  },
+  pairing: {
+    borderRadius: 10,
+    margin: 300,
+    alignItems: 'center',
   },
   innerContainer: {
     borderRadius: 10,
-    backgroundColor: 'blue',
     alignItems: 'center',
+  },
+  actionButtonIcon: {
+    fontSize: 20,
+    height: 22,
+    color: 'white',
   },
 });
 
