@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   Text,
   Modal,
+  Image,
   TouchableHighlight,
   View
 } from 'react-native';
@@ -168,6 +169,10 @@ export default class Jowalk039 extends Component {
           onUpdate={this.onUpdate}
           ref={(sketch) => { this.sketch = sketch; }}
           style={styles.sketch}
+        />
+        <Image
+          style={{position: 'absolute',top:25,left:0,zIndex: 1}}
+          source={require('./img/1.png')}
         />
         <TouchableHighlight 
           style={styles.addButton}
