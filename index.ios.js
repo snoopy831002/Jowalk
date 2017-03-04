@@ -14,11 +14,13 @@ import {
   Text,
   Modal,
   Image,
+  ScrollView,
   TouchableHighlight,
   View
 } from 'react-native';
 import Sketch from 'react-native-sketch';
 import renderIf from './js/renderif.js';
+import { takeSnapshot } from "react-native-view-shot";
 
 export default class Jowalk039 extends Component {
    constructor(props) {
@@ -27,6 +29,7 @@ export default class Jowalk039 extends Component {
     this.onReset = this.onReset.bind(this);
     this.onSave = this.onSave.bind(this);
     this.onUpdate = this.onUpdate.bind(this);
+    this.finishJourney = this.finishJourney.bind(this);
     global.flag = false;
     global.Interval;
     global.coordinates = {StartXcoordinate: '', EndXcoordinate: '',StartYcoordinate: '',EndYcoordinate: ''};
@@ -39,8 +42,34 @@ export default class Jowalk039 extends Component {
     modalVisible: false,
     transparent: true,
     selectedSupportedOrientation: 1,
-    pairingVisibilityStatus: false,
+    pairingVisibilityStatus: true,
+    slotVisibilityStatus: false,
+    screenShotSource: placeholder,
+    error: null,
+    value: {
+      format: "png",
+      quality: 0.9,
+      result: "file",
+    },
   };
+
+  snapshot = refname => () =>
+    takeSnapshot(this.refs[refname], this.state.value)
+    .then(res => this.state.value.result !== "file" ? res : new Promise((success, failure) =>
+          // just a test to ensure res can be used in Image.getSize
+          Image.getSize(
+            res,
+            (width, height) => (console.log(res,width,height), success(res)),
+            failure)))
+          .then(res => this.setState({
+            error: null,
+            res,
+            screenShotSource: { uri:
+              this.state.value.result === "base64"
+              ? "data:image/"+this.state.value.format+";base64,"+res
+              : res }
+          }))
+          .catch(error => (console.warn(error), this.setState({ error, res: null, screenShotSource: null })));
 
   _setModalVisible = (visible) => {
     this.setState({modalVisible: visible});
@@ -103,6 +132,36 @@ export default class Jowalk039 extends Component {
     return true;
   }
 
+  finishJourney() {
+    this.setState({modalVisible: true});
+    
+    takeSnapshot(this.refs['full'], this.state.value)
+    .then(res => this.state.value.result !== "file" ? res : new Promise((success, failure) =>
+          // just a test to ensure res can be used in Image.getSize
+          Image.getSize(
+            res,
+            (width, height) => (console.log(res,width,height), success(res)),
+            failure)))
+          .then(res => this.setState({
+            error: null,
+            res,
+            screenShotSource: { uri:
+              this.state.value.result === "base64"
+              ? "data:image/"+this.state.value.format+";base64,"+res
+              : res }
+          })).catch(error => (console.warn(error), this.setState({ error, res: null, screenShotSource: null })));
+
+    var finishJourneyInterval = setInterval(() => { 
+      if(!this.state.error){
+        this.setState({ slotVisibilityStatus: true });
+        this.setState({ pairingVisibilityStatus: false  });
+        clearInterval(finishJourneyInterval);
+      }
+    }, 2000);
+    
+
+  }
+
   handlePressIn(e){
     coordinates.StartXcoordinate = e.nativeEvent.locationX ;
     coordinates.StartYcoordinate = e.nativeEvent.locationY ;
@@ -127,6 +186,9 @@ export default class Jowalk039 extends Component {
   }
 
   render() {
+
+    const {screenShotSource,error} = this.state;
+
     var modalBackgroundStyle = {
       backgroundColor: this.state.transparent ? 'rgba(0, 0, 0, 0.5)' : '#f5fcff',
     };
@@ -137,7 +199,7 @@ export default class Jowalk039 extends Component {
       backgroundColor: '#ddd'
     };
     return (
-      <View style={styles.container}>
+      <View style={styles.container} ref="full">
         <Modal
           animationType={this.state.animationType}
           transparent={this.state.transparent}
@@ -146,13 +208,25 @@ export default class Jowalk039 extends Component {
           supportedOrientations={['landscape']}
           >
           <View style={[styles.modalContainer, modalBackgroundStyle]}>
-            <View style={[styles.pairing, innerContainerTransparentStyle]}>
-              <Text>正在配對路徑與獎勵</Text>
-            </View>
             {renderIf(this.state.pairingVisibilityStatus)(
               <View style={[styles.pairing, innerContainerTransparentStyle]}>
-                <Text>拉霸喔～～～</Text>
+                <Text>正在配對路徑與獎勵</Text>
               </View>
+            )}
+            {renderIf(this.state.slotVisibilityStatus)(
+
+              <View style={[styles.workoutDashboard, innerContainerTransparentStyle]}>
+                { error
+                  ? <Text style={styles.previewError}>
+                      {"有錯誤"+(error.message || error)}
+                    </Text>
+                  : <Image
+                      resizeMode="contain"
+                      style={styles.previewImage}
+                      source={screenShotSource}
+                /> }
+              </View>
+
             )}
           </View>
         </Modal>
@@ -174,10 +248,46 @@ export default class Jowalk039 extends Component {
           style={{position: 'absolute',top:25,left:0,zIndex: 1}}
           source={require('./img/1.png')}
         />
+        <Image
+          style={{position: 'absolute',top:140,left:0,zIndex: 1}}
+          source={require('./img/2.png')}
+        />
+        <Image
+          style={{position: 'absolute',top:25,left:55,zIndex: 1}}
+          source={require('./img/3.png')}
+        />
+        <Image
+          style={{position: 'absolute',top:155,left:0,zIndex: 1}}
+          source={require('./img/4.png')}
+        />
+        <Image
+          style={{position: 'absolute',top:600,left:0,zIndex: 1}}
+          source={require('./img/5.png')}
+        />
+        <Image
+          style={{position: 'absolute',top:25,left:355,zIndex: 1}}
+          source={require('./img/6.png')}
+        />
+        <Image
+          style={{position: 'absolute',top:25,left:150,zIndex: 1}}
+          source={require('./img/7.png')}
+        />
+        <Image
+          style={{position: 'absolute',top:170,left:130,zIndex: 1}}
+          source={require('./img/8.png')}
+        />
+        <Image
+          style={{position: 'absolute',top:255,left:180,zIndex: 1}}
+          source={require('./img/9.png')}
+        />
+        <Image
+          style={{position: 'absolute',top:300,left:170,zIndex: 1}}
+          source={require('./img/10.png')}
+        />
         <TouchableHighlight 
           style={styles.addButton}
           underlayColor='#ff7043' 
-          onPress={this._setModalVisible.bind(this, true)}>
+          onPress={this.finishJourney}>
           <Text style={{color: 'white'}}>結束旅程</Text>
         </TouchableHighlight>
       </View>
@@ -189,6 +299,10 @@ export default class Jowalk039 extends Component {
 function calculateDistance(InX,OutX,InY,OutY){
   return Math.sqrt(Math.pow(OutX-InX,2)+Math.pow(InY-OutY,2));
 }
+
+const placeholder = {
+  uri: './img/1.png',
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -229,6 +343,11 @@ addButton: {
     margin: 300,
     alignItems: 'center',
   },
+  workoutDashboard: {
+    borderRadius: 10,
+    margin: 3,
+    alignItems: 'center',
+  },
   innerContainer: {
     borderRadius: 10,
     alignItems: 'center',
@@ -237,6 +356,20 @@ addButton: {
     fontSize: 20,
     height: 22,
     color: 'white',
+  },
+  previewError: {
+    width: 375,
+    height: 300,
+    paddingTop: 20,
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#fff",
+    backgroundColor: "#c00",
+  },
+ previewImage: {
+    width: 375,
+    height: 300,
   },
 });
 
