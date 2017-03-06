@@ -42,6 +42,8 @@ export default class Jowalk039 extends Component {
   }
 
   state = {
+    totalDistance : '',
+    totalTime : 0,
     encodedSignature: null,
     animationType: 'fade',
     modalVisible: false,
@@ -160,6 +162,11 @@ export default class Jowalk039 extends Component {
 
     var finishJourneyInterval = setInterval(() => { 
       if(!this.state.error){
+        this.setState({ totalDistance: calculateTotalDistance(distanceArr)  });
+        this.setState({ totalTime: calculateTotalTime(distanceArr) });
+
+
+
         this.refs.modal1.zoomOut().then((endState) => console.log(endState.finished ? 'zoomOutfinished' : 'zoomOut cancelled'));
         this.setState({ pairingVisibilityStatus: false  });
         this.setState({ slotVisibilityStatus: true });
@@ -218,25 +225,39 @@ export default class Jowalk039 extends Component {
             {renderIf(this.state.pairingVisibilityStatus)(
               <Animatable.View ref="modal1" animation="zoomIn" style={[styles.pairing, innerContainerTransparentStyle]}>
                 <Animatable.View ref="view">
-                  <Text>Bounce me!</Text>
+                  <Text>正在配對路徑獎勵...</Text>
                 </Animatable.View>
               </Animatable.View>
             )}
             {renderIf(this.state.slotVisibilityStatus)(
-              <Animatable.View ref="modal2" animation="zoomIn" ref="workoutDashboard" style={[styles.workoutDashboard, innerContainerTransparentStyle]}>
-                { error
-                  ? <Text style={styles.previewError}>
-                        {"有錯誤"+(error.message || error)}
-                    </Text>
-                  : <Image
-                      resizeMode="contain"
-                      style={styles.previewImage}
-                      source={screenShotSource}
-                /> }
-                <View style={[styles.slotContainer]}>   
-                  <SlotMachine text="d" padding='1' range="abcd" />
-                </View> 
-              </Animatable.View>
+              <View>
+                <Animatable.View ref="modal2" animation="zoomIn" ref="workoutDashboard" style={[styles.workoutDashboard, innerContainerTransparentStyle]}>
+                  { error
+                    ? <Text style={styles.previewError}>
+                          {"有錯誤"+(error.message || error)}
+                      </Text>
+                    : <Image
+                        resizeMode="contain"
+                        style={styles.previewImage}
+                        source={screenShotSource}
+                  /> }
+                  <View style={[styles.slotContainer]}>   
+                    <SlotMachine text="d" padding='1' range="abcd" />
+                  </View> 
+                </Animatable.View>
+                <Text>
+                  {"時間："+(this.state.totalTime)}
+                </Text>
+                <Text>
+                  {"距離："+(this.state.totalDistance)}
+                </Text>
+                <Text>
+                  卡路里：
+                </Text>
+                <Text>
+                  步數：
+                </Text>
+              </View>
             )}
           </View>
         </Modal>
@@ -310,6 +331,20 @@ export default class Jowalk039 extends Component {
 
 function calculateDistance(InX,OutX,InY,OutY){
   return Math.sqrt(Math.pow(OutX-InX,2)+Math.pow(InY-OutY,2));
+}
+
+function calculateTotalTime(arr){
+  return arr.length;
+}
+
+function calculateTotalDistance(arr){
+  var totalDistance = 0;
+  arr.forEach(function (value) {
+    totalDistance +=  value;
+    //console.log(value);
+  });
+  
+  return totalDistance/30;
 }
 
 const placeholder = {
