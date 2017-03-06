@@ -16,24 +16,28 @@ import {
   Image,
   ScrollView,
   TouchableHighlight,
+  Animated, 
+  Easing,
   View
 } from 'react-native';
 import Sketch from 'react-native-sketch';
 import renderIf from './js/renderif.js';
 import { takeSnapshot } from "react-native-view-shot";
+import SlotMachine from 'react-native-slot-machine';
 
 export default class Jowalk039 extends Component {
+
    constructor(props) {
-    super(props);
-    this.clear = this.clear.bind(this);
-    this.onReset = this.onReset.bind(this);
-    this.onSave = this.onSave.bind(this);
-    this.onUpdate = this.onUpdate.bind(this);
-    this.finishJourney = this.finishJourney.bind(this);
-    global.flag = false;
-    global.Interval;
-    global.coordinates = {StartXcoordinate: '', EndXcoordinate: '',StartYcoordinate: '',EndYcoordinate: ''};
-    global.distanceArr = [];
+      super(props);
+      this.clear = this.clear.bind(this);
+      this.onReset = this.onReset.bind(this);
+      this.onSave = this.onSave.bind(this);
+      this.onUpdate = this.onUpdate.bind(this);
+      this.finishJourney = this.finishJourney.bind(this);
+      global.flag = false;
+      global.Interval;
+      global.coordinates = {StartXcoordinate: '', EndXcoordinate: '',StartYcoordinate: '',EndYcoordinate: ''};
+      global.distanceArr = [];
   }
 
   state = {
@@ -44,6 +48,7 @@ export default class Jowalk039 extends Component {
     selectedSupportedOrientation: 1,
     pairingVisibilityStatus: true,
     slotVisibilityStatus: false,
+    finishJourneyBtnVisibilityStatus: true,
     screenShotSource: placeholder,
     error: null,
     value: {
@@ -52,6 +57,7 @@ export default class Jowalk039 extends Component {
       result: "file",
     },
   };
+
 
   snapshot = refname => () =>
     takeSnapshot(this.refs[refname], this.state.value)
@@ -133,8 +139,9 @@ export default class Jowalk039 extends Component {
   }
 
   finishJourney() {
+    this.setState({ finishJourneyBtnVisibilityStatus: false  });
     this.setState({modalVisible: true});
-    
+    /*
     takeSnapshot(this.refs['full'], this.state.value)
     .then(res => this.state.value.result !== "file" ? res : new Promise((success, failure) =>
           // just a test to ensure res can be used in Image.getSize
@@ -150,17 +157,23 @@ export default class Jowalk039 extends Component {
               ? "data:image/"+this.state.value.format+";base64,"+res
               : res }
           })).catch(error => (console.warn(error), this.setState({ error, res: null, screenShotSource: null })));
-
+    */
     var finishJourneyInterval = setInterval(() => { 
       if(!this.state.error){
         this.setState({ slotVisibilityStatus: true });
         this.setState({ pairingVisibilityStatus: false  });
         clearInterval(finishJourneyInterval);
+
+        //
+        //this.refs['img1'].slideOutUp(80);
+        //this.refs['img1'].transitionTo({opacity: 0.2});
+        //this.refs['img1'].zoomOut;
+        //
       }
     }, 2000);
-    
-
   }
+
+
 
   handlePressIn(e){
     coordinates.StartXcoordinate = e.nativeEvent.locationX ;
@@ -186,7 +199,6 @@ export default class Jowalk039 extends Component {
   }
 
   render() {
-
     const {screenShotSource,error} = this.state;
 
     var modalBackgroundStyle = {
@@ -214,19 +226,11 @@ export default class Jowalk039 extends Component {
               </View>
             )}
             {renderIf(this.state.slotVisibilityStatus)(
-
               <View style={[styles.workoutDashboard, innerContainerTransparentStyle]}>
-                { error
-                  ? <Text style={styles.previewError}>
-                      {"有錯誤"+(error.message || error)}
-                    </Text>
-                  : <Image
-                      resizeMode="contain"
-                      style={styles.previewImage}
-                      source={screenShotSource}
-                /> }
+                <View style={[styles.slotContainer]}>   
+                  <SlotMachine text="d" padding='1'  range="abcd" />
+                </View> 
               </View>
-
             )}
           </View>
         </Modal>
@@ -284,12 +288,14 @@ export default class Jowalk039 extends Component {
           style={{position: 'absolute',top:300,left:170,zIndex: 1}}
           source={require('./img/10.png')}
         />
-        <TouchableHighlight 
-          style={styles.addButton}
-          underlayColor='#ff7043' 
-          onPress={this.finishJourney}>
-          <Text style={{color: 'white'}}>結束旅程</Text>
-        </TouchableHighlight>
+        {renderIf(this.state.finishJourneyBtnVisibilityStatus)(
+          <TouchableHighlight 
+            style={styles.addButton}
+            underlayColor='#ff7043' 
+            onPress={this.finishJourney}>
+            <Text style={{color: 'white'}}>結束旅程</Text>
+          </TouchableHighlight>
+        )}
       </View>
     );
   }
@@ -308,7 +314,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-addButton: {
+  addButton: {
     backgroundColor: '#ff5722',
     borderColor: '#ff5722',
     borderWidth: 1,
@@ -367,10 +373,65 @@ addButton: {
     color: "#fff",
     backgroundColor: "#c00",
   },
- previewImage: {
+  previewImage: {
     width: 375,
     height: 300,
   },
+  slotContainer: {
+    width: 300,
+    height: 300,
+  },
+});
+
+const slotStyles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        overflow: 'hidden',
+    },
+    slotWrapper: {
+        backgroundColor: 'gray',
+        marginLeft: 5,
+    },
+    slotInner: {
+        backgroundColor: 'red',
+        alignSelf: 'stretch',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 2,
+    },
+    text: {
+        fontSize: 50,
+        top: -2,
+        fontWeight: 'bold',
+        color: 'green',
+    },
+    innerBorder: {
+        position: 'absolute',
+        top: 1,
+        right: 1,
+        left: 1,
+        bottom: 1,
+        borderColor: 'black',
+        borderWidth: 1,
+        zIndex: 1,
+    },
+    outerBorder: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        left: 0,
+        bottom: 0,
+        borderColor: '#989898',
+        borderWidth: 1,
+        zIndex: 1,
+    },
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        left: 0,
+        backgroundColor: '#ffffff77'
+    }
 });
 
 AppRegistry.registerComponent('Jowalk039', () => Jowalk039);
