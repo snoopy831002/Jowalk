@@ -24,6 +24,7 @@ import Sketch from 'react-native-sketch';
 import renderIf from './js/renderif.js';
 import { takeSnapshot } from "react-native-view-shot";
 import SlotMachine from 'react-native-slot-machine';
+import * as Animatable from 'react-native-animatable';
 
 export default class Jowalk039 extends Component {
 
@@ -141,7 +142,6 @@ export default class Jowalk039 extends Component {
   finishJourney() {
     this.setState({ finishJourneyBtnVisibilityStatus: false  });
     this.setState({modalVisible: true});
-    /*
     takeSnapshot(this.refs['full'], this.state.value)
     .then(res => this.state.value.result !== "file" ? res : new Promise((success, failure) =>
           // just a test to ensure res can be used in Image.getSize
@@ -157,18 +157,13 @@ export default class Jowalk039 extends Component {
               ? "data:image/"+this.state.value.format+";base64,"+res
               : res }
           })).catch(error => (console.warn(error), this.setState({ error, res: null, screenShotSource: null })));
-    */
+
     var finishJourneyInterval = setInterval(() => { 
       if(!this.state.error){
-        this.setState({ slotVisibilityStatus: true });
+        this.refs.modal1.zoomOut().then((endState) => console.log(endState.finished ? 'zoomOutfinished' : 'zoomOut cancelled'));
         this.setState({ pairingVisibilityStatus: false  });
+        this.setState({ slotVisibilityStatus: true });
         clearInterval(finishJourneyInterval);
-
-        //
-        //this.refs['img1'].slideOutUp(80);
-        //this.refs['img1'].transitionTo({opacity: 0.2});
-        //this.refs['img1'].zoomOut;
-        //
       }
     }, 2000);
   }
@@ -221,16 +216,27 @@ export default class Jowalk039 extends Component {
           >
           <View style={[styles.modalContainer, modalBackgroundStyle]}>
             {renderIf(this.state.pairingVisibilityStatus)(
-              <View style={[styles.pairing, innerContainerTransparentStyle]}>
-                <Text>正在配對路徑與獎勵</Text>
-              </View>
+              <Animatable.View ref="modal1" animation="zoomIn" style={[styles.pairing, innerContainerTransparentStyle]}>
+                <Animatable.View ref="view">
+                  <Text>Bounce me!</Text>
+                </Animatable.View>
+              </Animatable.View>
             )}
             {renderIf(this.state.slotVisibilityStatus)(
-              <View style={[styles.workoutDashboard, innerContainerTransparentStyle]}>
+              <Animatable.View ref="modal2" animation="zoomIn" ref="workoutDashboard" style={[styles.workoutDashboard, innerContainerTransparentStyle]}>
+                { error
+                  ? <Text style={styles.previewError}>
+                        {"有錯誤"+(error.message || error)}
+                    </Text>
+                  : <Image
+                      resizeMode="contain"
+                      style={styles.previewImage}
+                      source={screenShotSource}
+                /> }
                 <View style={[styles.slotContainer]}>   
-                  <SlotMachine text="d" padding='1'  range="abcd" />
+                  <SlotMachine text="d" padding='1' range="abcd" />
                 </View> 
-              </View>
+              </Animatable.View>
             )}
           </View>
         </Modal>
@@ -352,7 +358,7 @@ const styles = StyleSheet.create({
   workoutDashboard: {
     borderRadius: 10,
     margin: 3,
-    alignItems: 'center',
+    flexDirection: 'row'
   },
   innerContainer: {
     borderRadius: 10,
@@ -376,62 +382,13 @@ const styles = StyleSheet.create({
   previewImage: {
     width: 375,
     height: 300,
+    left: 0
   },
   slotContainer: {
     width: 300,
     height: 300,
+    left: 180
   },
-});
-
-const slotStyles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        overflow: 'hidden',
-    },
-    slotWrapper: {
-        backgroundColor: 'gray',
-        marginLeft: 5,
-    },
-    slotInner: {
-        backgroundColor: 'red',
-        alignSelf: 'stretch',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 2,
-    },
-    text: {
-        fontSize: 50,
-        top: -2,
-        fontWeight: 'bold',
-        color: 'green',
-    },
-    innerBorder: {
-        position: 'absolute',
-        top: 1,
-        right: 1,
-        left: 1,
-        bottom: 1,
-        borderColor: 'black',
-        borderWidth: 1,
-        zIndex: 1,
-    },
-    outerBorder: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        left: 0,
-        bottom: 0,
-        borderColor: '#989898',
-        borderWidth: 1,
-        zIndex: 1,
-    },
-    overlay: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        left: 0,
-        backgroundColor: '#ffffff77'
-    }
 });
 
 AppRegistry.registerComponent('Jowalk039', () => Jowalk039);
