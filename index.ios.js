@@ -37,6 +37,8 @@ export default class Jowalk039 extends Component {
       this.finishJourney = this.finishJourney.bind(this);
       global.flag = false;
       global.Interval;
+      global.mapHeight = 0 ; 
+      global.mapWidth = 0 ;
       global.coordinates = {StartXcoordinate: '', EndXcoordinate: '',StartYcoordinate: '',EndYcoordinate: ''};
       global.distanceArr = [];
   }
@@ -54,6 +56,7 @@ export default class Jowalk039 extends Component {
     finishJourneyBtnVisibilityStatus: true,
     screenShotSource: placeholder,
     error: null,
+    btnVisible: false,
     value: {
       format: "png",
       quality: 0.9,
@@ -142,37 +145,40 @@ export default class Jowalk039 extends Component {
   }
 
   finishJourney() {
-    this.setState({ finishJourneyBtnVisibilityStatus: false  });
-    this.setState({modalVisible: true});
-    takeSnapshot(this.refs['full'], this.state.value)
-    .then(res => this.state.value.result !== "file" ? res : new Promise((success, failure) =>
-          // just a test to ensure res can be used in Image.getSize
-          Image.getSize(
-            res,
-            (width, height) => (console.log(res,width,height), success(res)),
-            failure)))
-          .then(res => this.setState({
-            error: null,
-            res,
-            screenShotSource: { uri:
-              this.state.value.result === "base64"
-              ? "data:image/"+this.state.value.format+";base64,"+res
-              : res }
-          })).catch(error => (console.warn(error), this.setState({ error, res: null, screenShotSource: null })));
 
+    this.setState({ hide: true  });
+    //console.log( this.state.hide ? "true" : "false");
+    
+      takeSnapshot(this.refs['full'], this.state.value)
+      .then(res => this.state.value.result !== "file" ? res : new Promise((success, failure) =>
+            // just a test to ensure res can be used in Image.getSize
+            Image.getSize(
+              res,
+              (width, height) => (console.log('uri='+res,width,height), success(res)),
+              failure)))
+            .then(res => this.setState({
+              error: null,
+              res,
+              screenShotSource: { uri:
+                this.state.value.result === "base64"
+                ? "data:image/"+this.state.value.format+";base64,"+res
+                : res }
+            })).catch(error => (console.warn(error), this.setState({ error, res: null, screenShotSource: null })));
+
+    this.setState({modalVisible: true});
     var finishJourneyInterval = setInterval(() => { 
       if(!this.state.error){
         this.setState({ totalDistance: calculateTotalDistance(distanceArr)  });
         this.setState({ totalTime: calculateTotalTime(distanceArr) });
-
-
-
         this.refs.modal1.zoomOut().then((endState) => console.log(endState.finished ? 'zoomOutfinished' : 'zoomOut cancelled'));
         this.setState({ pairingVisibilityStatus: false  });
         this.setState({ slotVisibilityStatus: true });
         clearInterval(finishJourneyInterval);
       }
     }, 2000);
+
+
+
   }
 
 
@@ -212,117 +218,255 @@ export default class Jowalk039 extends Component {
     var activeButtonStyle = {
       backgroundColor: '#ddd'
     };
+
     return (
-      <View style={styles.container} ref="full">
-        <Modal
-          animationType={this.state.animationType}
-          transparent={this.state.transparent}
+      <View style={styles.container}>
+        <View style={styles.container} ref="full">
+          <Modal
+            animationType={this.state.animationType}
+            transparent={this.state.transparent}
+            visible={this.state.modalVisible}
+            onRequestClose={() => this._setModalVisible(false)}
+            supportedOrientations={['landscape']}
+            >
+            <View style={[styles.modalContainer, modalBackgroundStyle]}>
+              {renderIf(this.state.pairingVisibilityStatus)(
+                <Animatable.View ref="modal1" animation="zoomIn" style={[styles.pairing, innerContainerTransparentStyle]}>
+                  <Animatable.View ref="view">
+                    <Text>正在配對路徑獎勵...</Text>
+                  </Animatable.View>
+                </Animatable.View>
+              )}
+              {renderIf(this.state.slotVisibilityStatus)(
+                <View>
+                  <Animatable.View ref="modal2" animation="zoomIn" ref="workoutDashboard" style={[styles.workoutDashboard, innerContainerTransparentStyle]}>
+                    { error
+                      ? <Text style={styles.previewError}>
+                            {"有錯誤"+(error.message || error)}
+                        </Text>
+                      : <Image
+                          resizeMode="contain"
+                          style={styles.previewImage}
+                          source={screenShotSource}
+                    /> }
+                    <View style={[styles.slotContainer]}>   
+                      <SlotMachine text="d" padding='1' range="abcd" />
+                    </View> 
+                  </Animatable.View>
+                  <Text>
+                    {"時間："+(this.state.totalTime)}
+                  </Text>
+                  <Text>
+                    {"距離："+(this.state.totalDistance)}
+                  </Text>
+                  <Text>
+                    卡路里：
+                  </Text>
+                  <Text>
+                    步數：
+                  </Text>
+                </View>
+              )}  
+            </View>
+          </Modal>
+          <Sketch
+            onStartShouldSetResponder={this._onStartShouldSetResponder}
+            onMoveShouldSetResponder={this._onMoveShouldSetResponder}
+            onResponderStart={this.handlePressIn}
+            onResponderMove={this.handleOnMove}
+            onResponderRelease={this.handlePressOut}
+            fillColor="#f5f5f5"
+            strokeColor="#111111"
+            strokeThickness={2}
+            onReset={this.onReset}
+            onUpdate={this.onUpdate}
+            ref={(sketch) => { this.sketch = sketch; }}
+            style={styles.sketch}
+          />
+          <Image
+            style={{height: 105*0.8 ,width: 65*0.8 , position: 'absolute',top:25,left:-5,zIndex: 1}}
+            source={require('./img/map/1.png')}
+          />
+          <Image
+            style={{height:161*0.8 ,width: 37*0.8,position: 'absolute',top:135,left:-5,zIndex: 1}}
+            source={require('./img/map/2.png')}
+          />
+          <Image
+            style={{height:117*0.8 ,width:105*0.8,position: 'absolute',top:25,left:50,zIndex: 1}}
+            source={require('./img/map/3.png')}
+          />
+          <Image
+            style={{height: 435*0.8,width: 132*0.8,position: 'absolute',top:140,left:0,zIndex: 1}}
+            source={require('./img/map/4.png')}
+          />
+          <Image
+            style={{height: 201*0.8,width: 46*0.8,position: 'absolute',top:550,left:-5,zIndex: 1}}
+            source={require('./img/map/5.png')}
+          />
+          <Image
+            style={{height: 18*0.8,width: 84*0.8,position: 'absolute',top:25,left:310,zIndex: 1}}
+            source={require('./img/map/6.png')}
+          />
+          <Image
+            style={{height: 142*0.8,width: 300*0.8,position: 'absolute',top:25,left:145,zIndex: 1}}
+            source={require('./img/map/7.png')}
+          />
+          <Image
+            style={{height: 128*0.8,width: 327*0.8,position: 'absolute',top:155,left:120,zIndex: 1}}
+            source={require('./img/map/8.png')}
+          />
+          <Image
+            style={{height: 39*0.8,width: 225*0.8,position: 'absolute',top:225,left:160,zIndex: 1}}
+            source={require('./img/map/9.png')}
+          />
+          <Image
+            style={{height: 46*0.8,width: 267*0.8,position: 'absolute',top:270,left:140,zIndex: 1}}
+            source={require('./img/map/10.png')}
+          />
+          <Image
+            style={{height: 121*0.8,width: 313*0.8,position: 'absolute',top:280,left:100,zIndex: 1}}
+            source={require('./img/map/11.png')}
+          />
+          <Image
+            style={{height: 137*0.8,width: 316*0.8,position: 'absolute',top:380,left:80,zIndex: 1}}
+            source={require('./img/map/12.png')}
+          />
+          <Image
+            style={{height: 142*0.8,width: 311*0.8,position: 'absolute',top:500,left:65,zIndex: 1}}
+            source={require('./img/map/13.png')}
+          />
+          <Image
+            style={{height: 191*0.8,width: 321*0.8,position: 'absolute',top:615,left:35,zIndex: 1}}
+            source={require('./img/map/14.png')}
+          />
+          <Image
+            style={{height: 59*0.8,width: 180*0.8,position: 'absolute',top:730,left:130,zIndex: 1}}
+            source={require('./img/map/15.png')}
+          />
+          <Image
+            style={{height: 20*0.8,width: 33*0.8,position: 'absolute',top:25,left:400,zIndex: 1}}
+            source={require('./img/map/16.png')}
+          />
+          <Image
+            style={{height: 18*0.8,width: 50*0.8,position: 'absolute',top:25,left:440,zIndex: 1}}
+            source={require('./img/map/17.png')}
+          />
+          <Image
+            style={{height: 17*0.8,width: 50*0.8,position: 'absolute',top:25,left:490,zIndex: 1}}
+            source={require('./img/map/18.png')}
+          />
+         <Image
+            style={{height: 15*0.8,width: 17*0.8,position: 'absolute',top:25,left:540,zIndex: 1}}
+            source={require('./img/map/19.png')}
+          />
+          <Image
+            style={{height: 15*0.8,width: 44*0.8,position: 'absolute',top:25,left:565,zIndex: 1}}
+            source={require('./img/map/20.png')}
+          />
+          <Image
+            style={{height: 59*0.8,width: 134*0.8,position: 'absolute',top:50,left:445,zIndex: 1}}
+            source={require('./img/map/21.png')}
+          />
+          <Image
+            style={{height: 143*0.8,width: 237*0.8,position: 'absolute',top:50,left:405,zIndex: 1}}
+            source={require('./img/map/22.png')}
+          />
+          <Image
+            style={{height: 134*0.8,width: 214*0.8,position: 'absolute',top:170,left:390,zIndex: 1}}
+            source={require('./img/map/23.png')}
+          />
+          <Image
+            style={{height: 123*0.8,width: 202*0.8,position: 'absolute',top:280,left:370,zIndex: 1}}
+            source={require('./img/map/24.png')}
+          />
+          <Image
+            style={{height: 126*0.8,width: 213*0.8,position: 'absolute',top:385,left:345,zIndex: 1}}
+            source={require('./img/map/25.png')}
+          />
+          <Image
+            style={{height: 127*0.8,width: 213*0.8,position: 'absolute',top:480,left:330,zIndex: 1}}
+            source={require('./img/map/26.png')}
+          />
+          <Image
+            style={{height: 121*0.8,width: 212*0.8,position: 'absolute',top:580,left:310,zIndex: 1}}
+            source={require('./img/map/27.png')}
+          />
+         <Image
+            style={{height: 34*0.8,width: 199*0.8,position: 'absolute',top:745,left:280,zIndex: 1}}
+            source={require('./img/map/28.png')}
+          />
+         <Image
+            style={{height: 40*0.8,width: 149*0.8,position: 'absolute',top:25,left:620,zIndex: 1}}
+            source={require('./img/map/29.png')}
+          />
+         <Image
+            style={{height: 48*0.8,width: 53*0.8,position: 'absolute',top:25,left:750,zIndex: 1}}
+            source={require('./img/map/30.png')}
+          />
+         <Image
+            style={{height: 60*0.8,width: 79*0.8,position: 'absolute',top:25,left:810,zIndex: 1}}
+            source={require('./img/map/31.png')}
+          />
+         <Image
+            style={{height: 85*0.8,width: 184*0.8,position: 'absolute',top:50,left:610,zIndex: 1}}
+            source={require('./img/map/32.png')}
+          />
+         <Image
+            style={{height: 59*0.8,width: 113*0.8,position: 'absolute',top:70,left:770,zIndex: 1}}
+            source={require('./img/map/33.png')}
+          />
+         <Image
+            style={{height: 119*0.8,width: 309*0.8,position: 'absolute',top:120,left:600,zIndex: 1}}
+            source={require('./img/map/34.png')}
+          />
+         <Image
+            style={{height: 139*0.8,width: 242*0.8,position: 'absolute',top:200,left:570,zIndex: 1}}
+            source={require('./img/map/35.png')}
+          />
+         <Image
+            style={{height: 465*0.8,width: 400*0.8,position: 'absolute',top:240,left:520,zIndex: 1}}
+            source={require('./img/map/36.png')}
+          />
+         <Image
+            style={{height: 113*0.8,width: 458*0.8,position: 'absolute',top:600,left:490,zIndex: 1}}
+            source={require('./img/map/37.png')}
+          />
+         <Image
+            style={{height: 5*0.8,width: 33*0.8,position: 'absolute',top:25,left:600,zIndex: 1}}
+            source={require('./img/map/38.png')}
+          />
+         <Image
+            style={{height: 72*0.8,width: 10*0.8,position: 'absolute',top:25,left:880,zIndex: 1}}
+            source={require('./img/map/39.png')}
+          />
+         <Image
+            style={{height: 107*0.8,width: 23*0.8,position: 'absolute',top:100,left:870,zIndex: 1}}
+            source={require('./img/map/40.png')}
+          />
+         <Image
+            style={{height: 89*0.8,width: 34*0.8,position: 'absolute',top:230,left:860,zIndex: 1}}
+            source={require('./img/map/41.png')}
+          />
+         <Image
+            style={{height: 237*0.8,width: 58*0.8,position: 'absolute',top:320,left:840,zIndex: 1}}
+            source={require('./img/map/42.png')}
+          />
+ 
+        </View>
+        <TouchableHighlight 
           visible={this.state.modalVisible}
-          onRequestClose={() => this._setModalVisible(false)}
-          supportedOrientations={['landscape']}
-          >
-          <View style={[styles.modalContainer, modalBackgroundStyle]}>
-            {renderIf(this.state.pairingVisibilityStatus)(
-              <Animatable.View ref="modal1" animation="zoomIn" style={[styles.pairing, innerContainerTransparentStyle]}>
-                <Animatable.View ref="view">
-                  <Text>正在配對路徑獎勵...</Text>
-                </Animatable.View>
-              </Animatable.View>
-            )}
-            {renderIf(this.state.slotVisibilityStatus)(
-              <View>
-                <Animatable.View ref="modal2" animation="zoomIn" ref="workoutDashboard" style={[styles.workoutDashboard, innerContainerTransparentStyle]}>
-                  { error
-                    ? <Text style={styles.previewError}>
-                          {"有錯誤"+(error.message || error)}
-                      </Text>
-                    : <Image
-                        resizeMode="contain"
-                        style={styles.previewImage}
-                        source={screenShotSource}
-                  /> }
-                  <View style={[styles.slotContainer]}>   
-                    <SlotMachine text="d" padding='1' range="abcd" />
-                  </View> 
-                </Animatable.View>
-                <Text>
-                  {"時間："+(this.state.totalTime)}
-                </Text>
-                <Text>
-                  {"距離："+(this.state.totalDistance)}
-                </Text>
-                <Text>
-                  卡路里：
-                </Text>
-                <Text>
-                  步數：
-                </Text>
-              </View>
-            )}
-          </View>
-        </Modal>
-        <Sketch
-          onStartShouldSetResponder={this._onStartShouldSetResponder}
-          onMoveShouldSetResponder={this._onMoveShouldSetResponder}
-          onResponderStart={this.handlePressIn}
-          onResponderMove={this.handleOnMove}
-          onResponderRelease={this.handlePressOut}
-          fillColor="#f5f5f5"
-          strokeColor="#111111"
-          strokeThickness={2}
-          onReset={this.onReset}
-          onUpdate={this.onUpdate}
-          ref={(sketch) => { this.sketch = sketch; }}
-          style={styles.sketch}
-        />
-        <Image
-          style={{position: 'absolute',top:25,left:0,zIndex: 1}}
-          source={require('./img/1.png')}
-        />
-        <Image
-          style={{position: 'absolute',top:140,left:0,zIndex: 1}}
-          source={require('./img/2.png')}
-        />
-        <Image
-          style={{position: 'absolute',top:25,left:55,zIndex: 1}}
-          source={require('./img/3.png')}
-        />
-        <Image
-          style={{position: 'absolute',top:155,left:0,zIndex: 1}}
-          source={require('./img/4.png')}
-        />
-        <Image
-          style={{position: 'absolute',top:600,left:0,zIndex: 1}}
-          source={require('./img/5.png')}
-        />
-        <Image
-          style={{position: 'absolute',top:25,left:355,zIndex: 1}}
-          source={require('./img/6.png')}
-        />
-        <Image
-          style={{position: 'absolute',top:25,left:150,zIndex: 1}}
-          source={require('./img/7.png')}
-        />
-        <Image
-          style={{position: 'absolute',top:170,left:130,zIndex: 1}}
-          source={require('./img/8.png')}
-        />
-        <Image
-          style={{position: 'absolute',top:255,left:180,zIndex: 1}}
-          source={require('./img/9.png')}
-        />
-        <Image
-          style={{position: 'absolute',top:300,left:170,zIndex: 1}}
-          source={require('./img/10.png')}
-        />
-        {renderIf(this.state.finishJourneyBtnVisibilityStatus)(
-          <TouchableHighlight 
-            style={styles.addButton}
-            underlayColor='#ff7043' 
-            onPress={this.finishJourney}>
-            <Text style={{color: 'white'}}>結束旅程</Text>
-          </TouchableHighlight>
-        )}
+          style={ !this.state.hide ? styles.addButton : styles.addButton2 }
+          underlayColor='#ff7043' 
+          onPress={this.finishJourney}>
+          <Text style={{color: 'white'}}>結束旅程</Text>
+        </TouchableHighlight>
+        <TouchableHighlight 
+          visible={this.state.modalVisible}
+          style={ styles.addButton2 }
+          underlayColor='#ff7043' 
+          onPress={this.finishJourney}>
+          <Text style={{color: 'white'}}>結束旅程</Text>
+        </TouchableHighlight>
       </View>
     );
   }
@@ -367,6 +511,27 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: (Dimensions.get("window").height)*0.5+50,
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 0
+    }
+  },
+  addButton2: {
+   opacity: 0,
+    backgroundColor: '#ff5722',
+    borderColor: '#ff5722',
+    borderWidth: 1,
+    height: 50,
+    width: 150,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: 20,
+    right: (Dimensions.get("window").height)*0.5+250,
     shadowColor: "#000000",
     shadowOpacity: 0.8,
     shadowRadius: 2,
