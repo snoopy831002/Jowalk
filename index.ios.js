@@ -10,18 +10,19 @@ import {
   StyleSheet,
   Button,
   Dimensions,
-  TouchableOpacity,
   Text,
   Modal,
   Image,
-  ScrollView,
   TouchableHighlight,
+  TouchableWithoutFeedback,
   Animated, 
   Easing,
   View
 } from 'react-native';
+
 import Sketch from 'react-native-sketch';
 import renderIf from './js/renderif.js';
+import FadeInView from './js/FadeInView.js';
 import { takeSnapshot } from "react-native-view-shot";
 import SlotMachine from 'react-native-slot-machine';
 import * as Animatable from 'react-native-animatable';
@@ -35,10 +36,12 @@ export default class Jowalk039 extends Component {
       this.onSave = this.onSave.bind(this);
       this.onUpdate = this.onUpdate.bind(this);
       this.finishJourney = this.finishJourney.bind(this);
+      this.triggerAnimation=this.triggerAnimation.bind(this);
       global.flag = false;
       global.Interval;
       global.mapHeight = 0 ; 
       global.mapWidth = 0 ;
+      global.SQUARE_DIMENSIONS = 30;
       global.coordinates = {StartXcoordinate: '', EndXcoordinate: '',StartYcoordinate: '',EndYcoordinate: ''};
       global.distanceArr = [];
   }
@@ -46,6 +49,7 @@ export default class Jowalk039 extends Component {
   state = {
     totalDistance : '',
     totalTime : 0,
+    handloopState : 1,
     encodedSignature: null,
     animationType: 'fade',
     modalVisible: false,
@@ -62,8 +66,8 @@ export default class Jowalk039 extends Component {
       quality: 0.9,
       result: "file",
     },
+    pan: new Animated.ValueXY(),
   };
-
 
   snapshot = refname => () =>
     takeSnapshot(this.refs[refname], this.state.value)
@@ -99,6 +103,44 @@ export default class Jowalk039 extends Component {
     this.setState({
       status:!this.state.pairingVisibilityStatus
     });
+  }
+
+  componentDidMount() {
+    this.startAndRepeat();
+  }
+
+  startAndRepeat() {
+      this.triggerAnimation();  
+  }
+
+  triggerAnimation() {
+    if(this.state.handloopState){
+      Animated.sequence([
+          Animated.spring(this.state.pan, {
+            toValue: {x: 200, y: 100},
+            duration: 4000,    
+          }),
+          Animated.spring(this.state.pan, {
+            toValue: {x: 100, y: 80},
+            duration: 4000,    
+          })
+      ]).start(event => {
+      if (event.finished) {
+        this.triggerAnimation();
+      }});
+    }
+  }
+
+  /**
+   * 
+   */
+  getStyle() {
+    return [
+      styles.hand, 
+      {
+        transform: this.state.pan.getTranslateTransform()
+      }
+    ];
   }
 
   /**
@@ -145,10 +187,7 @@ export default class Jowalk039 extends Component {
   }
 
   finishJourney() {
-
     this.setState({ hide: true  });
-    //console.log( this.state.hide ? "true" : "false");
-    
       takeSnapshot(this.refs['full'], this.state.value)
       .then(res => this.state.value.result !== "file" ? res : new Promise((success, failure) =>
             // just a test to ensure res can be used in Image.getSize
@@ -164,7 +203,6 @@ export default class Jowalk039 extends Component {
                 ? "data:image/"+this.state.value.format+";base64,"+res
                 : res }
             })).catch(error => (console.warn(error), this.setState({ error, res: null, screenShotSource: null })));
-
     this.setState({modalVisible: true});
     var finishJourneyInterval = setInterval(() => { 
       if(!this.state.error){
@@ -176,17 +214,13 @@ export default class Jowalk039 extends Component {
         clearInterval(finishJourneyInterval);
       }
     }, 2000);
-
-
-
   }
-
-
 
   handlePressIn(e){
     coordinates.StartXcoordinate = e.nativeEvent.locationX ;
     coordinates.StartYcoordinate = e.nativeEvent.locationY ;
     Interval = setInterval(() => { flag = true; }, 1000);
+
   }
 
   handlePressOut(){
@@ -221,6 +255,7 @@ export default class Jowalk039 extends Component {
 
     return (
       <View style={styles.container}>
+      
         <View style={styles.container} ref="full">
           <Modal
             animationType={this.state.animationType}
@@ -269,20 +304,22 @@ export default class Jowalk039 extends Component {
               )}  
             </View>
           </Modal>
-          <Sketch
-            onStartShouldSetResponder={this._onStartShouldSetResponder}
-            onMoveShouldSetResponder={this._onMoveShouldSetResponder}
-            onResponderStart={this.handlePressIn}
-            onResponderMove={this.handleOnMove}
-            onResponderRelease={this.handlePressOut}
-            fillColor="#f5f5f5"
-            strokeColor="#111111"
-            strokeThickness={2}
-            onReset={this.onReset}
-            onUpdate={this.onUpdate}
-            ref={(sketch) => { this.sketch = sketch; }}
-            style={styles.sketch}
-          />
+            <TouchableWithoutFeedback onPress={()=>{this.setState({ handloopState: 0  });}}>
+              <Sketch
+                onStartShouldSetResponder={this._onStartShouldSetResponder}
+                onMoveShouldSetResponder={this._onMoveShouldSetResponder}
+                onResponderStart={this.handlePressIn}
+                onResponderMove={this.handleOnMove}
+                onResponderRelease={this.handlePressOut}
+                fillColor="#f5f5f5"
+                strokeColor="#111111"
+                strokeThickness={2}
+                onReset={this.onReset}
+                onUpdate={this.onUpdate}
+                ref={(sketch) => { this.sketch = sketch; }}
+                style={styles.sketch}
+              />
+            </TouchableWithoutFeedback>
           <Image
             style={{height: 105*0.8 ,width: 65*0.8 , position: 'absolute',top:25,left:-5,zIndex: 1}}
             source={require('./img/map/1.png')}
@@ -451,7 +488,10 @@ export default class Jowalk039 extends Component {
             style={{height: 237*0.8,width: 58*0.8,position: 'absolute',top:320,left:840,zIndex: 1}}
             source={require('./img/map/42.png')}
           />
- 
+          <Animated.Image 
+            style={this.getStyle()} 
+            source={require('./img/hand.png')}
+          />
         </View>
         <TouchableHighlight 
           visible={this.state.modalVisible}
@@ -460,17 +500,9 @@ export default class Jowalk039 extends Component {
           onPress={this.finishJourney}>
           <Text style={{color: 'white'}}>結束旅程</Text>
         </TouchableHighlight>
-        <TouchableHighlight 
-          visible={this.state.modalVisible}
-          style={ styles.addButton2 }
-          underlayColor='#ff7043' 
-          onPress={this.finishJourney}>
-          <Text style={{color: 'white'}}>結束旅程</Text>
-        </TouchableHighlight>
       </View>
     );
   }
-  
 }
 
 function calculateDistance(InX,OutX,InY,OutY){
@@ -511,27 +543,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: (Dimensions.get("window").height)*0.5+50,
-    shadowColor: "#000000",
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 1,
-      width: 0
-    }
-  },
-  addButton2: {
-   opacity: 0,
-    backgroundColor: '#ff5722',
-    borderColor: '#ff5722',
-    borderWidth: 1,
-    height: 50,
-    width: 150,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    bottom: 20,
-    right: (Dimensions.get("window").height)*0.5+250,
     shadowColor: "#000000",
     shadowOpacity: 0.8,
     shadowRadius: 2,
@@ -589,6 +600,12 @@ const styles = StyleSheet.create({
     height: 300,
     left: 180
   },
+  hand: {
+    top:100,
+    left:50,
+    position: 'absolute',
+    zIndex: 1
+  } 
 });
 
 AppRegistry.registerComponent('Jowalk039', () => Jowalk039);
