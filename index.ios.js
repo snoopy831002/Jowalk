@@ -213,7 +213,7 @@ export default class Jowalk039 extends Component {
         this.setState({ slotVisibilityStatus: true });
         clearInterval(finishJourneyInterval);
       }
-    }, 2000);
+    }, 8000);
   }
 
   handlePressIn(e){
@@ -266,10 +266,9 @@ export default class Jowalk039 extends Component {
             >
             <View style={[styles.modalContainer, modalBackgroundStyle]}>
               {renderIf(this.state.pairingVisibilityStatus)(
-                <Animatable.View ref="modal1" animation="zoomIn" style={[styles.pairing, innerContainerTransparentStyle]}>
-                  <Animatable.View ref="view">
-                    <Text>正在配對路徑獎勵...</Text>
-                  </Animatable.View>
+                <Animatable.View animation="zoomIn" style={styles.loading} ref="modal1">
+                  <Text style={{color: 'white'}}>正在配對路徑獎勵</Text>
+                  <Image source={require('./img/loading.gif')} />
                 </Animatable.View>
               )}
               {renderIf(this.state.slotVisibilityStatus)(
@@ -561,10 +560,9 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height-100, // Height needed; Default: 200px
     zIndex: 0,
   },
-  pairing: {
-    borderRadius: 10,
-    margin: 300,
+  loading: {
     alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0)',
   },
   workoutDashboard: {
     borderRadius: 10,
