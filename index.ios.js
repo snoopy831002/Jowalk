@@ -70,6 +70,7 @@ export default class Jowalk039 extends Component {
       result: "file",
     },
     pan: new Animated.ValueXY(),
+    uri: require('./img/confirm.png'),
   };
 
   snapshot = refname => () =>
@@ -295,11 +296,11 @@ export default class Jowalk039 extends Component {
                       <SlotMachine text="d" padding='1' range="abcd" />
                     </View> 
                   </Animatable.View>
-                  <TouchableWithoutFeedback onPress={()=>{console.log('fuck');}}>
+                  <TouchableWithoutFeedback onPress={()=>{this.setState({ uri:require('./img/confirmHit.png')   });}}>
                     <View>
                       <Image 
                         style={{width:252,height:94}}
-                        source={!this.props.confirmPressed ? require('./img/confirm.png') : require('./img/confirmHit.png')}
+                        source={this.state.uri}
                       />
                     </View>
                   </TouchableWithoutFeedback>
