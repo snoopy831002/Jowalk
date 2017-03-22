@@ -26,10 +26,11 @@ import FadeInView from './js/FadeInView.js';
 import { takeSnapshot } from "react-native-view-shot";
 import SlotMachine from 'react-native-slot-machine';
 import * as Animatable from 'react-native-animatable';
+import Chart from 'react-native-chart';
 
 export default class Jowalk039 extends Component {
 
-   constructor(props) {
+  constructor(props) {
       super(props);
       this.clear = this.clear.bind(this);
       this.onReset = this.onReset.bind(this);
@@ -37,6 +38,7 @@ export default class Jowalk039 extends Component {
       this.onUpdate = this.onUpdate.bind(this);
       this.finishJourney = this.finishJourney.bind(this);
       this.triggerAnimation=this.triggerAnimation.bind(this);
+      this.handleConfirmPressIn=this.handleConfirmPressIn(this);
       global.flag = false;
       global.Interval;
       global.mapHeight = 0 ; 
@@ -60,6 +62,7 @@ export default class Jowalk039 extends Component {
     finishJourneyBtnVisibilityStatus: true,
     screenShotSource: placeholder,
     error: null,
+    confirmPressed: false,
     btnVisible: false,
     value: {
       format: "png",
@@ -213,7 +216,7 @@ export default class Jowalk039 extends Component {
         this.setState({ slotVisibilityStatus: true });
         clearInterval(finishJourneyInterval);
       }
-    }, 8000);
+    }, 1500);
   }
 
   handlePressIn(e){
@@ -226,6 +229,11 @@ export default class Jowalk039 extends Component {
   handlePressOut(){
     clearInterval(Interval);
     console.log(distanceArr);
+  }
+
+  handleConfirmPressIn(){
+    
+    console.log('confirmed');
   }
 
   handleOnMove(e) {
@@ -287,18 +295,14 @@ export default class Jowalk039 extends Component {
                       <SlotMachine text="d" padding='1' range="abcd" />
                     </View> 
                   </Animatable.View>
-                  <Text>
-                    {"時間："+(this.state.totalTime)}
-                  </Text>
-                  <Text>
-                    {"距離："+(this.state.totalDistance)}
-                  </Text>
-                  <Text>
-                    卡路里：
-                  </Text>
-                  <Text>
-                    步數：
-                  </Text>
+                  <TouchableWithoutFeedback onPress={()=>{console.log('fuck');}}>
+                    <View>
+                      <Image 
+                        style={{width:252,height:94}}
+                        source={!this.props.confirmPressed ? require('./img/confirm.png') : require('./img/confirmHit.png')}
+                      />
+                    </View>
+                  </TouchableWithoutFeedback>
                 </View>
               )}  
             </View>
