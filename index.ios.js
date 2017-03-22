@@ -26,7 +26,6 @@ import FadeInView from './js/FadeInView.js';
 import { takeSnapshot } from "react-native-view-shot";
 import SlotMachine from 'react-native-slot-machine';
 import * as Animatable from 'react-native-animatable';
-import Chart from 'react-native-chart';
 
 export default class Jowalk039 extends Component {
 
@@ -59,6 +58,7 @@ export default class Jowalk039 extends Component {
     selectedSupportedOrientation: 1,
     pairingVisibilityStatus: true,
     slotVisibilityStatus: false,
+    chartVisibilityStatus: false,
     finishJourneyBtnVisibilityStatus: true,
     screenShotSource: placeholder,
     error: null,
@@ -70,8 +70,12 @@ export default class Jowalk039 extends Component {
       result: "file",
     },
     pan: new Animated.ValueXY(),
-    uri: require('./img/confirm.png'),
+    confirmUri: require('./img/confirm.png'),
+    previousUri: require('./img/previous.png'),
+    nextUri: require('./img/next.png'),
   };
+
+
 
   snapshot = refname => () =>
     takeSnapshot(this.refs[refname], this.state.value)
@@ -296,11 +300,37 @@ export default class Jowalk039 extends Component {
                       <SlotMachine text="d" padding='1' range="abcd" />
                     </View> 
                   </Animatable.View>
-                  <TouchableWithoutFeedback onPress={()=>{this.setState({ uri:require('./img/confirmHit.png')   });}}>
+                  <TouchableWithoutFeedback 
+                    onPressIn={()=>{this.setState({ confirmUri:require('./img/confirmHit.png')});}}
+                    onPress={()=>{this.setState({ confirmUri:require('./img/confirm.png')});
+                                  this.setState({ slotVisibilityStatus:false});
+                                  this.setState({ chartVisibilityStatus:true});
+                    }}
+                  >
                     <View>
                       <Image 
                         style={{width:252,height:94}}
-                        source={this.state.uri}
+                        source={this.state.confirmUri}
+                      />
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
+              )}  
+              {renderIf(this.state.chartVisibilityStatus)(
+                <View>
+                  <Animatable.View ref="modal3" animation="zoomIn" ref="workoutDashboard" style={[styles.workoutDashboard, innerContainerTransparentStyle]}>
+
+
+ 
+                  </Animatable.View>
+                  <TouchableWithoutFeedback 
+                    onPressIn={()=>{this.setState({ previousUri:require('./img/confirmHit.png')});}}
+                    onPress={()=>{this.setState({ previousUri:require('./img/confirm.png')});}}
+                  >
+                    <View>
+                      <Image 
+                        style={{width:252,height:94}}
+                        source={this.state.previousUri}
                       />
                     </View>
                   </TouchableWithoutFeedback>
@@ -608,7 +638,18 @@ const styles = StyleSheet.create({
     left:50,
     position: 'absolute',
     zIndex: 1
-  } 
+  },
+  chartContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  chart: {
+    flex:1,
+    width: 200,
+    height: 200,
+  },
 });
 
 AppRegistry.registerComponent('Jowalk039', () => Jowalk039);
