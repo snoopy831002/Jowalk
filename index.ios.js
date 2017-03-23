@@ -26,6 +26,7 @@ import FadeInView from './js/FadeInView.js';
 import { takeSnapshot } from "react-native-view-shot";
 import SlotMachine from 'react-native-slot-machine';
 import * as Animatable from 'react-native-animatable';
+import Chart from 'react-native-chart';
 
 export default class Jowalk039 extends Component {
 
@@ -265,8 +266,15 @@ export default class Jowalk039 extends Component {
     var activeButtonStyle = {
       backgroundColor: '#ddd'
     };
+const data = [[
+  [0, 1],
+  [1, 3],
+  [3, 7],
+  [4, 9],
+]];
 
     return (
+
       <View style={styles.container}>
       
         <View style={styles.container} ref="full">
@@ -319,9 +327,16 @@ export default class Jowalk039 extends Component {
               {renderIf(this.state.chartVisibilityStatus)(
                 <View>
                   <Animatable.View ref="modal3" animation="zoomIn" ref="workoutDashboard" style={[styles.workoutDashboard, innerContainerTransparentStyle]}>
-
-
- 
+                    <View style={styles.chartContainer}>
+                      <Chart
+                        style={styles.chart}
+                        data={data}
+                        verticalGridStep={5}
+                        type="line"
+                        showDataPoint={true}
+                        color={['#e1cd00']}
+                       />
+                    </View>
                   </Animatable.View>
                   <TouchableWithoutFeedback 
                     onPressIn={()=>{this.setState({ previousUri:require('./img/confirmHit.png')});}}
@@ -646,7 +661,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   chart: {
-    flex:1,
     width: 200,
     height: 200,
   },
