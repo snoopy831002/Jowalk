@@ -268,9 +268,9 @@ export default class Jowalk039 extends Component {
     };
 const data = [[
   [0, 1],
-  [1, 3],
-  [3, 7],
-  [4, 9],
+  [1, 2],
+  [2, 3],
+  [3, 4],
 ]];
 
     return (
@@ -325,31 +325,62 @@ const data = [[
                 </View>
               )}  
               {renderIf(this.state.chartVisibilityStatus)(
-                <View>
-                  <Animatable.View ref="modal3" animation="zoomIn" ref="workoutDashboard" style={[styles.workoutDashboard, innerContainerTransparentStyle]}>
+                  <Animatable.View ref="modal3" animation="zoomIn" ref="" style={styles.chartDashboard}>
+                    <View style={styles.modal3TopContainer}>
+                    </View>
                     <View style={styles.chartContainer}>
                       <Chart
-                        style={styles.chart}
-                        data={data}
-                        verticalGridStep={5}
-                        type="line"
-                        showDataPoint={true}
-                        color={['#e1cd00']}
-                       />
+
+
+       style={styles.chart}
+            data={data}
+            showDataPoint={true}
+            color={['#02F78E']}
+            axisColor='#6A6AFF'
+            hideHorizontalGridLines={true}
+            hideVerticalGridLines={true}
+            dataPointFillColor={['rgba(0,0,0,0)']}
+            dataPointColor={['rgba(0,0,0,0)']}
+            xAxisHeight={50}
+            showXAxisLabels={true}
+            type="line"
+                        />
                     </View>
+                    <View style={styles.modal3statisticContainer}>
+                    </View>
+                    <View style={styles.modal3buttonContainer}>
+
+
+                    <TouchableWithoutFeedback 
+                      onPressIn={()=>{this.setState({ previousUri:require('./img/previousHit.png')});}}
+                      onPress={()=>{this.setState({ previousUri:require('./img/previous.png')});}}
+                    >
+                      <View>
+                        <Image 
+                          style={{width:252,height:94}}
+                          source={this.state.previousUri}
+                        />
+                      </View>
+                    </TouchableWithoutFeedback>
+
+                    <TouchableWithoutFeedback 
+                      onPressIn={()=>{this.setState({ nextUri:require('./img/nextHit.png')});}}
+                      onPress={()=>{this.setState({ nextUri:require('./img/next.png')});}}
+                    >
+                      <View>
+                        <Image 
+                          style={{width:252,height:94}}
+                          source={this.state.nextUri}
+                        />
+                      </View>
+                    </TouchableWithoutFeedback>
+
+
+
+                    </View>
+                    
+
                   </Animatable.View>
-                  <TouchableWithoutFeedback 
-                    onPressIn={()=>{this.setState({ previousUri:require('./img/confirmHit.png')});}}
-                    onPress={()=>{this.setState({ previousUri:require('./img/confirm.png')});}}
-                  >
-                    <View>
-                      <Image 
-                        style={{width:252,height:94}}
-                        source={this.state.previousUri}
-                      />
-                    </View>
-                  </TouchableWithoutFeedback>
-                </View>
               )}  
             </View>
           </Modal>
@@ -619,6 +650,10 @@ const styles = StyleSheet.create({
     margin: 3,
     flexDirection: 'row'
   },
+  chartDashboard: {
+    margin: 3,
+    flexDirection: 'column'
+  },
   innerContainer: {
     borderRadius: 10,
     alignItems: 'center',
@@ -654,15 +689,40 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1
   },
+  chart: {
+    width: 900,
+  },
   chartContainer: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    height: 250,
+    margin: 3,
+    //backgroundColor: "white",
+    flexDirection: 'row'
   },
-  chart: {
-    width: 200,
+  modal3TopContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 200,
+    margin: 3,
+    //backgroundColor: "red",
+    flexDirection: 'row'
+  },
+  modal3statisticContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 100,
+    margin: 3,
+    //backgroundColor: "blue",
+    flexDirection: 'row'
+  },
+  modal3buttonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 150,
+    margin: 3,
+    //backgroundColor: "green",
+    flexDirection: 'row'
   },
 });
 
