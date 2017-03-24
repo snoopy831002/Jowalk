@@ -45,7 +45,7 @@ export default class Jowalk039 extends Component {
       global.mapWidth = 0 ;
       global.SQUARE_DIMENSIONS = 30;
       global.coordinates = {StartXcoordinate: '', EndXcoordinate: '',StartYcoordinate: '',EndYcoordinate: ''};
-      global.distanceArr = [];
+      global.distanceArr = [[]];
   }
 
   state = {
@@ -59,6 +59,7 @@ export default class Jowalk039 extends Component {
     selectedSupportedOrientation: 1,
     pairingVisibilityStatus: true,
     slotVisibilityStatus: false,
+    confirmVisibilityStatus: false,
     chartVisibilityStatus: false,
     finishJourneyBtnVisibilityStatus: true,
     screenShotSource: placeholder,
@@ -208,6 +209,10 @@ export default class Jowalk039 extends Component {
         this.setState({ pairingVisibilityStatus: false  });
         this.setState({ slotVisibilityStatus: true });
         clearInterval(finishJourneyInterval);
+        var displayConfirmInterval = setInterval(() => { 
+          this.setState({ confirmVisibilityStatus: true });
+          clearInterval(displayConfirmInterval);
+        }, 2000);
       }
     }, 1500);
   }
@@ -229,7 +234,8 @@ export default class Jowalk039 extends Component {
       coordinates.EndXcoordinate = e.nativeEvent.locationX;
       coordinates.EndYcoordinate = e.nativeEvent.locationY;
       var distance = calculateDistance(coordinates.StartXcoordinate,coordinates.EndXcoordinate,coordinates.StartYcoordinate,coordinates.EndYcoordinate);
-      distanceArr.push(distance);
+      var distanceData = [distanceArr[0].length,distance] ;
+      distanceArr[0].push(distanceData);
       coordinates.StartXcoordinate = coordinates.EndXcoordinate ;
       coordinates.StartYcoordinate = coordinates.EndYcoordinate ;
       flag = false ;
@@ -288,19 +294,21 @@ const data = [[
                       </View> 
                     </View> 
                     <View style={styles.modal2buttonContainer}>
-                      <TouchableWithoutFeedback 
-                        onPressIn={()=>{this.setState({ confirmUri:require('./img/confirmHit.png')});}}
-                        onPress={()=>{this.setState({ confirmUri:require('./img/confirm.png')});
-                                      this.setState({ slotVisibilityStatus:false});
-                                      this.setState({ chartVisibilityStatus:true});}}>
-                        <View>
-                          <Image 
-                            style={{width:252,height:94}}
-                            source={this.state.confirmUri}
-                          />
-                        </View>
-                      
-                      </TouchableWithoutFeedback>
+                      {renderIf(this.state.confirmVisibilityStatus)(
+                        <TouchableWithoutFeedback 
+                          onPressIn={()=>{this.setState({ confirmUri:require('./img/confirmHit.png')});}}
+                          onPress={()=>{this.setState({ confirmUri:require('./img/confirm.png')});
+                                        this.setState({ slotVisibilityStatus:false});
+                                        this.setState({ chartVisibilityStatus:true});}}>
+                          <View>
+                            <Image 
+                              style={{width:252,height:94}}
+                              source={this.state.confirmUri}
+                            />
+                          </View>
+                        
+                        </TouchableWithoutFeedback>
+                      )}
                     </View> 
                   </Animatable.View>
                 </View>
@@ -312,7 +320,7 @@ const data = [[
                   <View style={styles.chartContainer}>
                       <Chart
                         style={styles.chart}
-                        data={data}
+                        data={distanceArr}
                         showDataPoint={true}
                         color={['#02F78E']}
                         axisColor='#6A6AFF'
