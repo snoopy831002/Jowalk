@@ -19,14 +19,17 @@ import {
   Easing,
   View
 } from 'react-native';
+
 import Sketch from 'react-native-sketch';
 import renderIf from './js/renderif.js';
+import FadeInView from './js/FadeInView.js';
 import { takeSnapshot } from "react-native-view-shot";
 import SlotMachine from 'react-native-slot-machine';
 import * as Animatable from 'react-native-animatable';
 import Chart from 'react-native-chart';
 
 export default class Jowalk039 extends Component {
+
 
    constructor(props) {
      super(props);
@@ -76,6 +79,7 @@ export default class Jowalk039 extends Component {
     previousUri: require('./img/previous.png'),
     nextUri: require('./img/next.png'),
   };
+
 
 
   snapshot = refname => () =>
@@ -139,7 +143,6 @@ export default class Jowalk039 extends Component {
       }});
     }
   }
-
 
   getStyle() {
     return [
@@ -223,17 +226,22 @@ export default class Jowalk039 extends Component {
   }
 
 
-
  handlePressIn(e){
     this.setState({ handloopState: 0  });
     coordinates.StartXcoordinate = e.nativeEvent.locationX ;
     coordinates.StartYcoordinate = e.nativeEvent.locationY ;
     Interval = setInterval(() => { flag = true; }, 1000);
+
   }
 
   handlePressOut(){
     clearInterval(Interval);
     console.log(distanceArr);
+  }
+
+  handleConfirmPressIn(){
+    
+    console.log('confirmed');
   }
 
   handleOnMove(e) {
@@ -574,7 +582,6 @@ const data = [[
       </View>
     );
   }
-  
 }
 
 function calculateDistance(InX,OutX,InY,OutY){
