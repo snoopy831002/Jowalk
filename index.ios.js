@@ -6,7 +6,7 @@
 
 import React, { Component } from 'react';
 import {
-  AppRegistry,
+ AppRegistry,
   StyleSheet,
   Button,
   Dimensions,
@@ -30,17 +30,21 @@ import Chart from 'react-native-chart';
 
 export default class Jowalk039 extends Component {
 
-  constructor(props) {
-      super(props);
+
+   constructor(props) {
+     super(props);
       this.clear = this.clear.bind(this);
       this.onReset = this.onReset.bind(this);
       this.onSave = this.onSave.bind(this);
       this.onUpdate = this.onUpdate.bind(this);
       this.finishJourney = this.finishJourney.bind(this);
       this.triggerAnimation=this.triggerAnimation.bind(this);
-      this.handleConfirmPressIn=this.handleConfirmPressIn(this);
+      this.handlePressIn=this.handlePressIn.bind(this);
+      this.handlePressOut=this.handlePressOut.bind(this);
+      this.handleOnMove=this.handleOnMove.bind(this);
       global.flag = false;
       global.Interval;
+      global.onHandleMoveCounter=0;
       global.mapHeight = 0 ; 
       global.mapWidth = 0 ;
       global.SQUARE_DIMENSIONS = 30;
@@ -140,9 +144,6 @@ export default class Jowalk039 extends Component {
     }
   }
 
-  /**
-   * 
-   */
   getStyle() {
     return [
       styles.hand, 
@@ -151,7 +152,6 @@ export default class Jowalk039 extends Component {
       }
     ];
   }
-
   /**
    * Clear / reset the drawing
    */
@@ -225,7 +225,9 @@ export default class Jowalk039 extends Component {
     }, 1500);
   }
 
-  handlePressIn(e){
+
+ handlePressIn(e){
+    this.setState({ handloopState: 0  });
     coordinates.StartXcoordinate = e.nativeEvent.locationX ;
     coordinates.StartYcoordinate = e.nativeEvent.locationY ;
     Interval = setInterval(() => { flag = true; }, 1000);
@@ -272,7 +274,6 @@ const data = [[
   [2, 3],
   [3, 4],
 ]];
-
     return (
 
       <View style={styles.container}>
@@ -335,12 +336,12 @@ const data = [[
        style={styles.chart}
             data={data}
             showDataPoint={true}
-            color={['#02F78E']}
+            color='#02F78E'
             axisColor='#6A6AFF'
             hideHorizontalGridLines={true}
             hideVerticalGridLines={true}
-            dataPointFillColor={['rgba(0,0,0,0)']}
-            dataPointColor={['rgba(0,0,0,0)']}
+            dataPointFillColor='rgba(0,0,0,0)'
+            dataPointColor='rgba(0,0,0,0)'
             xAxisHeight={50}
             showXAxisLabels={true}
             type="line"
@@ -384,7 +385,6 @@ const data = [[
               )}  
             </View>
           </Modal>
-            <TouchableWithoutFeedback onPress={()=>{this.setState({ handloopState: 0  });}}>
               <Sketch
                 onStartShouldSetResponder={this._onStartShouldSetResponder}
                 onMoveShouldSetResponder={this._onMoveShouldSetResponder}
@@ -399,7 +399,6 @@ const data = [[
                 ref={(sketch) => { this.sketch = sketch; }}
                 style={styles.sketch}
               />
-            </TouchableWithoutFeedback>
           <Image
             style={{height: 105*0.8 ,width: 65*0.8 , position: 'absolute',top:25,left:-5,zIndex: 1}}
             source={require('./img/map/1.png')}
