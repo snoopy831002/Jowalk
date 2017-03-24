@@ -61,6 +61,7 @@ export default class Jowalk039 extends Component {
     slotVisibilityStatus: false,
     confirmVisibilityStatus: false,
     chartVisibilityStatus: false,
+    CharacterVisibilityStatus: false,
     finishJourneyBtnVisibilityStatus: true,
     screenShotSource: placeholder,
     error: null,
@@ -253,12 +254,6 @@ export default class Jowalk039 extends Component {
     var activeButtonStyle = {
       backgroundColor: '#ddd'
     };
-const data = [[
-  [0, 1],
-  [1, 2],
-  [2, 3],
-  [3, 4],
-]];
     return (
       <View style={styles.container}>
         <View style={styles.container} ref="full">
@@ -338,7 +333,9 @@ const data = [[
                   <View style={styles.modal3buttonContainer}>
                     <TouchableWithoutFeedback 
                         onPressIn={()=>{this.setState({ previousUri:require('./img/previousHit.png')});}}
-                        onPress={()=>{this.setState({ previousUri:require('./img/previous.png')});}}>
+                        onPress={()=>{this.setState({ previousUri:require('./img/previous.png')});
+                                      this.setState({ slotVisibilityStatus:true});
+                                      this.setState({ chartVisibilityStatus:false});}}>
                         <View>
                           <Image 
                             style={{width:252,height:94}}
@@ -348,7 +345,9 @@ const data = [[
                     </TouchableWithoutFeedback>
                     <TouchableWithoutFeedback 
                         onPressIn={()=>{this.setState({ nextUri:require('./img/nextHit.png')});}}
-                        onPress={()=>{this.setState({ nextUri:require('./img/next.png')});}}>
+                        onPress={()=>{this.setState({ nextUri:require('./img/next.png')});
+                                      this.setState({ CharacterVisibilityStatus:true});
+                                      this.setState({ chartVisibilityStatus:false});}}>
                         <View>
                           <Image 
                             style={{width:252,height:94}}
@@ -359,22 +358,33 @@ const data = [[
                   </View>
                 </Animatable.View>
               )}  
+              {renderIf(this.state.CharacterVisibilityStatus)(
+                <Animatable.View ref="modal4" animation="zoomIn" ref="" style={styles.modal4}>
+                  <View style={styles.modal4TopicContainer}>
+                  <Text>請選一個角色</Text>
+                  </View>
+                  <View style={styles.modal4CharacterContainer}>
+                  </View>
+                  <View style={styles.modal4buttonContainer}>
+                  </View>
+                </Animatable.View>
+              )}  
             </View>
           </Modal>
-              <Sketch
-                onStartShouldSetResponder={this._onStartShouldSetResponder}
-                onMoveShouldSetResponder={this._onMoveShouldSetResponder}
-                onResponderStart={this.handlePressIn}
-                onResponderMove={this.handleOnMove}
-                onResponderRelease={this.handlePressOut}
-                fillColor="#f5f5f5"
-                strokeColor="#111111"
-                strokeThickness={2}
-                onReset={this.onReset}
-                onUpdate={this.onUpdate}
-                ref={(sketch) => { this.sketch = sketch; }}
-                style={styles.sketch}
-              />
+          <Sketch
+            onStartShouldSetResponder={this._onStartShouldSetResponder}
+            onMoveShouldSetResponder={this._onMoveShouldSetResponder}
+            onResponderStart={this.handlePressIn}
+            onResponderMove={this.handleOnMove}
+            onResponderRelease={this.handlePressOut}
+            fillColor="#f5f5f5"
+            strokeColor="#111111"
+            strokeThickness={2}
+            onReset={this.onReset}
+            onUpdate={this.onUpdate}
+            ref={(sketch) => { this.sketch = sketch; }}
+            style={styles.sketch}
+          />
           <Image
             style={{height: 105*0.8 ,width: 65*0.8 , position: 'absolute',top:25,left:-5,zIndex: 1}}
             source={require('./img/map/1.png')}
@@ -706,6 +716,34 @@ const styles = StyleSheet.create({
     margin: 3,
     //backgroundColor: "green",
     flexDirection: 'row'
+  },
+  modal4TopicContainer: {
+justifyContent: 'center',
+    alignItems: 'center',
+    height: 150,
+    margin: 3,
+    //backgroundColor: "red",
+    flexDirection: 'row'
+  },
+  modal4CharacterContainer: {
+justifyContent: 'center',
+    alignItems: 'center',
+    height: 300,
+    margin: 3,
+    //backgroundColor: "green",
+    flexDirection: 'row'
+  },
+  modal4buttonContainer: {
+justifyContent: 'center',
+    alignItems: 'center',
+    height: 150,
+    margin: 3,
+    //backgroundColor: "blue",
+    flexDirection: 'row'
+  },
+  modal4: {
+    margin: 3,
+    flexDirection: 'column'
   },
 });
 
