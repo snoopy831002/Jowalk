@@ -1,12 +1,12 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
+ * Jowalk - An ncku ide project
+ * https://github.com/snoopy831002/Jowalk
+ * @Author : snoopy831002 
  */
 
 import React, { Component } from 'react';
 import {
- AppRegistry,
+  AppRegistry,
   StyleSheet,
   Button,
   Dimensions,
@@ -16,13 +16,11 @@ import {
   TouchableHighlight,
   TouchableWithoutFeedback,
   Animated, 
-  Easing,
   View
 } from 'react-native';
 
 import Sketch from 'react-native-sketch';
 import renderIf from './js/renderif.js';
-import FadeInView from './js/FadeInView.js';
 import { takeSnapshot } from "react-native-view-shot";
 import SlotMachine from 'react-native-slot-machine';
 import * as Animatable from 'react-native-animatable';
@@ -30,11 +28,9 @@ import Chart from 'react-native-chart';
 
 export default class Jowalk039 extends Component {
 
-
    constructor(props) {
-     super(props);
+      super(props);
       this.clear = this.clear.bind(this);
-      this.onReset = this.onReset.bind(this);
       this.onSave = this.onSave.bind(this);
       this.onUpdate = this.onUpdate.bind(this);
       this.finishJourney = this.finishJourney.bind(this);
@@ -79,8 +75,6 @@ export default class Jowalk039 extends Component {
     previousUri: require('./img/previous.png'),
     nextUri: require('./img/next.png'),
   };
-
-
 
   snapshot = refname => () =>
     takeSnapshot(this.refs[refname], this.state.value)
@@ -161,13 +155,6 @@ export default class Jowalk039 extends Component {
   }
 
   /**
-   * Do extra things after the sketch reset
-   */
-  onReset() {
-    console.log('The drawing has been cleared!');
-  }
-
-  /**
    * The Sketch component provides a 'saveImage' function (promise),
    * so that you can save the drawing in the device and get an object
    * once the promise is resolved, containing the path of the image.
@@ -225,23 +212,16 @@ export default class Jowalk039 extends Component {
     }, 1500);
   }
 
-
- handlePressIn(e){
+  handlePressIn(e){
     this.setState({ handloopState: 0  });
     coordinates.StartXcoordinate = e.nativeEvent.locationX ;
     coordinates.StartYcoordinate = e.nativeEvent.locationY ;
     Interval = setInterval(() => { flag = true; }, 1000);
-
   }
 
   handlePressOut(){
     clearInterval(Interval);
     console.log(distanceArr);
-  }
-
-  handleConfirmPressIn(){
-    
-    console.log('confirmed');
   }
 
   handleOnMove(e) {
@@ -258,7 +238,6 @@ export default class Jowalk039 extends Component {
 
   render() {
     const {screenShotSource,error} = this.state;
-
     var modalBackgroundStyle = {
       backgroundColor: this.state.transparent ? 'rgba(0, 0, 0, 0.5)' : '#f5fcff',
     };
@@ -275,9 +254,7 @@ const data = [[
   [3, 4],
 ]];
     return (
-
       <View style={styles.container}>
-      
         <View style={styles.container} ref="full">
           <Modal
             animationType={this.state.animationType}
@@ -295,93 +272,84 @@ const data = [[
               )}
               {renderIf(this.state.slotVisibilityStatus)(
                 <View>
-                  <Animatable.View ref="modal2" animation="zoomIn" ref="workoutDashboard" style={[styles.workoutDashboard, innerContainerTransparentStyle]}>
-                    { error
-                      ? <Text style={styles.previewError}>
-                            {"有錯誤"+(error.message || error)}
-                        </Text>
-                      : <Image
-                          resizeMode="contain"
-                          style={styles.previewImage}
-                          source={screenShotSource}
-                    /> }
-                    <View style={[styles.slotContainer]}>   
-                      <SlotMachine text="d" padding='1' range="abcd" />
+                  <Animatable.View ref="modal2" animation="zoomIn" ref="workoutDashboard">
+                    <View style={[styles.modal2WorkoutContainer, innerContainerTransparentStyle]}>
+                      { error
+                        ? <Text style={styles.previewError}>
+                              {"有錯誤"+(error.message || error)}
+                          </Text>
+                        : <Image
+                            resizeMode="contain"
+                            style={styles.previewImage}
+                            source={screenShotSource}
+                      /> }
+                      <View style={[styles.slotContainer]}>   
+                        <SlotMachine text="d" padding='1' range="abcd" />
+                      </View> 
+                    </View> 
+                    <View style={styles.modal2buttonContainer}>
+                      <TouchableWithoutFeedback 
+                        onPressIn={()=>{this.setState({ confirmUri:require('./img/confirmHit.png')});}}
+                        onPress={()=>{this.setState({ confirmUri:require('./img/confirm.png')});
+                                      this.setState({ slotVisibilityStatus:false});
+                                      this.setState({ chartVisibilityStatus:true});}}>
+                        <View>
+                          <Image 
+                            style={{width:252,height:94}}
+                            source={this.state.confirmUri}
+                          />
+                        </View>
+                      
+                      </TouchableWithoutFeedback>
                     </View> 
                   </Animatable.View>
-                  <TouchableWithoutFeedback 
-                    onPressIn={()=>{this.setState({ confirmUri:require('./img/confirmHit.png')});}}
-                    onPress={()=>{this.setState({ confirmUri:require('./img/confirm.png')});
-                                  this.setState({ slotVisibilityStatus:false});
-                                  this.setState({ chartVisibilityStatus:true});
-                    }}
-                  >
-                    <View>
-                      <Image 
-                        style={{width:252,height:94}}
-                        source={this.state.confirmUri}
-                      />
-                    </View>
-                  </TouchableWithoutFeedback>
                 </View>
               )}  
               {renderIf(this.state.chartVisibilityStatus)(
-                  <Animatable.View ref="modal3" animation="zoomIn" ref="" style={styles.chartDashboard}>
-                    <View style={styles.modal3TopContainer}>
-                    </View>
-                    <View style={styles.chartContainer}>
+                <Animatable.View ref="modal3" animation="zoomIn" ref="" style={styles.chartDashboard}>
+                  <View style={styles.modal3TopContainer}>
+                  </View>
+                  <View style={styles.chartContainer}>
                       <Chart
-
-
-       style={styles.chart}
-            data={data}
-            showDataPoint={true}
-            color='#02F78E'
-            axisColor='#6A6AFF'
-            hideHorizontalGridLines={true}
-            hideVerticalGridLines={true}
-            dataPointFillColor='rgba(0,0,0,0)'
-            dataPointColor='rgba(0,0,0,0)'
-            xAxisHeight={50}
-            showXAxisLabels={true}
-            type="line"
-                        />
-                    </View>
-                    <View style={styles.modal3statisticContainer}>
-                    </View>
-                    <View style={styles.modal3buttonContainer}>
-
-
+                        style={styles.chart}
+                        data={data}
+                        showDataPoint={true}
+                        color={['#02F78E']}
+                        axisColor='#6A6AFF'
+                        hideHorizontalGridLines={true}
+                        hideVerticalGridLines={true}
+                        dataPointFillColor={['rgba(0,0,0,0)']}
+                        dataPointColor={['rgba(0,0,0,0)']}
+                        xAxisHeight={50}
+                        showXAxisLabels={true}
+                        type="line"
+                      />
+                  </View>
+                  <View style={styles.modal3statisticContainer}>
+                  </View>
+                  <View style={styles.modal3buttonContainer}>
                     <TouchableWithoutFeedback 
-                      onPressIn={()=>{this.setState({ previousUri:require('./img/previousHit.png')});}}
-                      onPress={()=>{this.setState({ previousUri:require('./img/previous.png')});}}
-                    >
-                      <View>
-                        <Image 
-                          style={{width:252,height:94}}
-                          source={this.state.previousUri}
-                        />
-                      </View>
+                        onPressIn={()=>{this.setState({ previousUri:require('./img/previousHit.png')});}}
+                        onPress={()=>{this.setState({ previousUri:require('./img/previous.png')});}}>
+                        <View>
+                          <Image 
+                            style={{width:252,height:94}}
+                            source={this.state.previousUri}
+                          />
+                        </View>
                     </TouchableWithoutFeedback>
-
                     <TouchableWithoutFeedback 
-                      onPressIn={()=>{this.setState({ nextUri:require('./img/nextHit.png')});}}
-                      onPress={()=>{this.setState({ nextUri:require('./img/next.png')});}}
-                    >
-                      <View>
-                        <Image 
-                          style={{width:252,height:94}}
-                          source={this.state.nextUri}
-                        />
-                      </View>
+                        onPressIn={()=>{this.setState({ nextUri:require('./img/nextHit.png')});}}
+                        onPress={()=>{this.setState({ nextUri:require('./img/next.png')});}}>
+                        <View>
+                          <Image 
+                            style={{width:252,height:94}}
+                            source={this.state.nextUri}
+                          />
+                        </View>
                     </TouchableWithoutFeedback>
-
-
-
-                    </View>
-                    
-
-                  </Animatable.View>
+                  </View>
+                </Animatable.View>
               )}  
             </View>
           </Modal>
@@ -644,11 +612,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0)',
   },
-  workoutDashboard: {
-    borderRadius: 10,
-    margin: 3,
-    flexDirection: 'row'
-  },
   chartDashboard: {
     margin: 3,
     flexDirection: 'column'
@@ -716,6 +679,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   modal3buttonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 150,
+    margin: 3,
+    //backgroundColor: "green",
+    flexDirection: 'row'
+  },
+  modal2WorkoutContainer: {
+    borderRadius: 10,
+    margin: 3,
+    flexDirection: 'row'
+  },
+  modal2buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     height: 150,
