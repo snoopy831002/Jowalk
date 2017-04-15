@@ -14,8 +14,10 @@ import {
   Modal,
   Image,
   TouchableHighlight,
+  TouchableOpacity,
   TouchableWithoutFeedback,
-  Animated, 
+  Animated,
+  ScrollView,
   View
 } from 'react-native';
 
@@ -25,6 +27,7 @@ import { takeSnapshot } from "react-native-view-shot";
 import SlotMachine from 'react-native-slot-machine';
 import * as Animatable from 'react-native-animatable';
 import Chart from 'react-native-chart';
+import FitImage from 'react-native-fit-image';
 
 export default class Jowalk039 extends Component {
 
@@ -77,6 +80,7 @@ export default class Jowalk039 extends Component {
     confirmUri: require('./img/confirm.png'),
     previousUri: require('./img/previous.png'),
     nextUri: require('./img/next.png'),
+    playAgainUri: require('./img/playAgain.png'),
   };
 
   snapshot = refname => () =>
@@ -245,6 +249,27 @@ export default class Jowalk039 extends Component {
   }
 
   render() {
+
+    ////
+var THUMB_URLS = [
+  require('./img/characters/char1.png'),
+  require('./img/characters/char1.png'),
+  require('./img/characters/char1.png'),
+  require('./img/characters/char1.png'),
+  require('./img/characters/char1.png'),
+  require('./img/characters/char1.png'),
+  require('./img/characters/char1.png'),
+  require('./img/characters/char1.png'),
+  require('./img/characters/char1.png'),
+  require('./img/characters/char1.png'),
+  require('./img/characters/char1.png'),
+  require('./img/characters/char1.png'),
+];
+
+THUMB_URLS = THUMB_URLS.concat(THUMB_URLS); // double length of THUMB_URLS
+
+var createThumbRow = (uri, i) => <Jowalk039 key={i} source={uri} />;
+    ////
     const {screenShotSource,error} = this.state;
     var modalBackgroundStyle = {
       backgroundColor: this.state.transparent ? 'rgba(0, 0, 0, 0.5)' : '#f5fcff',
@@ -401,15 +426,52 @@ export default class Jowalk039 extends Component {
               {renderIf(this.state.RankVisibilityStatus)(
                 <Animatable.View ref="modal5" animation="zoomIn" ref="" style={styles.modal5}>
                   <View style={styles.modal5TopicContainer}>
-                  <Text style={{color:'#FFFFFF',fontSize:50}}>您的名次</Text>
+                    <Text style={{color:'#FFFFFF',fontSize:50}}>您的名次</Text>
                   </View>
                   <View style={styles.modal5RankContainer}>
+                      <ScrollView
+                        ref={(scrollView) => { _scrollView = scrollView; }}
+                        automaticallyAdjustContentInsets={false}
+                        bounces={true}
+                        style={styles.scrollView}
+                        scrollEventThrottle={200}>
+                        <View style={styles.rankPlacesContainer}>
+                          <View style={styles.rankPlace}><Text style={{color:'#FFFFFF',fontSize:50,textAlign: 'center'}}>1</Text></View>
+                          <View style={styles.rankCharacter}>
+                            <Image 
+                              source={require('./img/characters/char1.png')}
+                              style={{width:70,height:70}}
+                            />
+                          </View>
+                          <View style={styles.rankPlaceholder}></View>
+                          <View style={styles.rankSprint}>
+                            <Image 
+                              source={require('./img/sprint.png')}
+                              style={{width:70,height:70}}
+                            />
+                          </View>
+                          <View style={styles.rankMinute}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>6.63 km/hr</Text></View>
+                        </View>
+
+
+                        
+                      </ScrollView>
                   </View>
                   <View style={styles.modal5buttonContainer}>
+                    <TouchableWithoutFeedback 
+                      onPressIn={()=>{this.setState({  playAgainUri:require('./img/playAgainHit.png')});}}
+                      onPress={()=>{this.setState({  playAgainUri:require('./img/playAgain.png')});}}>
+                        <View>
+                          <Image 
+                            style={{width:252,height:94}}
+                            source={this.state.playAgainUri}
+                          />
+                        </View>        
+                    </TouchableWithoutFeedback>
                   </View>
                 </Animatable.View>
               )}  
-            </View>
+                </View>
           </Modal>
           <Sketch
             onStartShouldSetResponder={this._onStartShouldSetResponder}
@@ -794,7 +856,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     margin: 3,
-    backgroundColor: "red",
+    //backgroundColor: "red",
     flexDirection: 'row'
   }, 
   modal5RankContainer:{
@@ -802,17 +864,61 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 500,
     margin: 3,
-    backgroundColor: "green",
+    //backgroundColor: "green",
     flexDirection: 'row'
   },
   modal5buttonContainer:{
-justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
     height: 50,
     margin: 3,
-    backgroundColor: "blue",
+    //backgroundColor: "blue",
     flexDirection: 'row'
-  }
+  },
+  scrollView:{
+    flexDirection: 'row',
+    //backgroundColor: "red",
+  },
+  rankPlacesContainer:{
+    height: 90,
+    width:960,
+    //backgroundColor: "blue",
+    margin: 3,
+    padding: 2,
+    borderRadius:10,
+    borderWidth: 5,
+    borderColor: '#E8843C',
+    flexDirection: 'row'
+  },
+  rankPlace:{
+    height: 70,
+    width:60,
+    backgroundColor: "red",
+  },
+  rankCharacter:{
+    height: 70,
+    width:85,
+    backgroundColor: "orange",
+    //margin: 2,
+  },
+  rankPlaceholder:{
+    height: 70,
+    width:520,
+    backgroundColor: "yellow",
+    //margin: 2,
+  },
+  rankSprint:{
+    height: 70,
+    width:85,
+    backgroundColor: "green",
+    //margin: 2,
+  },
+  rankMinute:{
+    height: 70,
+    width:190,
+    backgroundColor: "blue",
+    //margin: 2,
+  },
 });
 
 AppRegistry.registerComponent('Jowalk039', () => Jowalk039);
