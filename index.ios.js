@@ -14,8 +14,10 @@ import {
   Modal,
   Image,
   TouchableHighlight,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   Animated, 
+  ScrollView,
   View
 } from 'react-native';
 
@@ -25,6 +27,8 @@ import { takeSnapshot } from "react-native-view-shot";
 import SlotMachine from 'react-native-slot-machine';
 import * as Animatable from 'react-native-animatable';
 import Chart from 'react-native-chart';
+
+
 
 export default class Jowalk039 extends Component {
 
@@ -121,6 +125,10 @@ export default class Jowalk039 extends Component {
 
   startAndRepeat() {
       this.triggerAnimation();  
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return false;
   }
 
   triggerAnimation() {
@@ -255,6 +263,31 @@ export default class Jowalk039 extends Component {
     var activeButtonStyle = {
       backgroundColor: '#ddd'
     };
+    function renderScrollView(title: string, addtionalStyles: StyleSheet) {
+      var _scrollView: ScrollView;
+      return (
+        <View style={addtionalStyles}>
+          <Text style={styles.text}>{title}</Text>
+          <ScrollView
+            ref={(scrollView) => { _scrollView = scrollView; }}
+            automaticallyAdjustContentInsets={false}
+            horizontal={true}
+            style={[styles.scrollView, styles.horizontalScrollView]}>
+            {THUMB_URLS.map(createThumbRow)}
+          </ScrollView>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => { _scrollView.scrollTo({x: 0}); }}>
+            <Text>Scroll to start</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => { _scrollView.scrollToEnd({animated: true}); }}>
+            <Text>Scroll to end</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         <View style={styles.container} ref="full">
@@ -404,6 +437,7 @@ export default class Jowalk039 extends Component {
                   <Text style={{color:'#FFFFFF',fontSize:50}}>您的名次</Text>
                   </View>
                   <View style={styles.modal5RankContainer}>
+ 
                   </View>
                   <View style={styles.modal5buttonContainer}>
                   </View>
@@ -632,6 +666,29 @@ const placeholder = {
   uri: './img/1.png',
 };
 
+////
+
+
+var THUMB_URLS = [
+  require('./img/characters/char1.png'),
+  require('./img/characters/char2.png'),
+  require('./img/characters/char3.png'),
+  require('./img/characters/char4.png'),
+  require('./img/characters/char1.png'),
+  require('./img/characters/char2.png'),
+  require('./img/characters/char3.png'),
+  require('./img/characters/char4.png'),
+  require('./img/characters/char1.png'),
+  require('./img/characters/char2.png'),
+  require('./img/characters/char3.png'),
+  require('./img/characters/char4.png'),
+];
+
+THUMB_URLS = THUMB_URLS.concat(THUMB_URLS); // double length of THUMB_URLS
+
+var createThumbRow = (uri, i) => <Jowalk039 key={i} source={uri} />;
+////
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -790,7 +847,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   modal5TopicContainer:{
- justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
     height: 50,
     margin: 3,
@@ -798,20 +855,50 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   }, 
   modal5RankContainer:{
-   justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
     height: 500,
     margin: 3,
-    backgroundColor: "green",
+    //backgroundColor: "green",
     flexDirection: 'row'
   },
   modal5buttonContainer:{
-justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
     height: 50,
     margin: 3,
-    backgroundColor: "blue",
+    //backgroundColor: "blue",
     flexDirection: 'row'
+  },
+    scrollView: {
+    backgroundColor: '#eeeeee',
+    height: 300,
+  },
+  horizontalScrollView: {
+    height: 106,
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    margin: 5,
+  },
+  button: {
+    margin: 5,
+    padding: 5,
+    alignItems: 'center',
+    backgroundColor: '#cccccc',
+    borderRadius: 3,
+  },
+  thumb: {
+    margin: 5,
+    padding: 5,
+    backgroundColor: '#cccccc',
+    borderRadius: 3,
+    minWidth: 96,
+  },
+  img: {
+    width: 64,
+    height: 64,
   }
 });
 
