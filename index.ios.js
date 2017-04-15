@@ -62,6 +62,7 @@ export default class Jowalk039 extends Component {
     confirmVisibilityStatus: false,
     chartVisibilityStatus: false,
     CharacterVisibilityStatus: false,
+    RankVisibilityStatus: false,
     finishJourneyBtnVisibilityStatus: true,
     screenShotSource: placeholder,
     error: null,
@@ -361,11 +362,50 @@ export default class Jowalk039 extends Component {
               {renderIf(this.state.CharacterVisibilityStatus)(
                 <Animatable.View ref="modal4" animation="zoomIn" ref="" style={styles.modal4}>
                   <View style={styles.modal4TopicContainer}>
-                  <Text>請選一個角色</Text>
+                  <Text style={{color:'#FFFFFF',fontSize:50}}>請選一個角色</Text>
                   </View>
                   <View style={styles.modal4CharacterContainer}>
+                      <TouchableWithoutFeedback 
+                        onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
+                                          this.setState({ RankVisibilityStatus:true});}}>  
+                          <Image 
+                            source={require('./img/characters/char1.png')}
+                          />
+                      </TouchableWithoutFeedback> 
+                      <TouchableWithoutFeedback  
+                        onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
+                                          this.setState({ RankVisibilityStatus:true});}}> 
+                          <Image 
+                            source={require('./img/characters/char2.png')}
+                          />
+                      </TouchableWithoutFeedback> 
+                      <TouchableWithoutFeedback   
+                        onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
+                                          this.setState({ RankVisibilityStatus:true});}}> 
+                          <Image 
+                            source={require('./img/characters/char3.png')}
+                          />
+                      </TouchableWithoutFeedback> 
+                      <TouchableWithoutFeedback  
+                        onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
+                                          this.setState({ RankVisibilityStatus:true});}}>   
+                          <Image 
+                            source={require('./img/characters/char4.png')}
+                          />
+                      </TouchableWithoutFeedback>  
                   </View>
                   <View style={styles.modal4buttonContainer}>
+                  </View>
+                </Animatable.View>
+              )}  
+              {renderIf(this.state.RankVisibilityStatus)(
+                <Animatable.View ref="modal5" animation="zoomIn" ref="" style={styles.modal5}>
+                  <View style={styles.modal5TopicContainer}>
+                  <Text style={{color:'#FFFFFF',fontSize:50}}>您的名次</Text>
+                  </View>
+                  <View style={styles.modal5RankContainer}>
+                  </View>
+                  <View style={styles.modal5buttonContainer}>
                   </View>
                 </Animatable.View>
               )}  
@@ -718,7 +758,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   modal4TopicContainer: {
-justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
     height: 150,
     margin: 3,
@@ -726,7 +766,7 @@ justifyContent: 'center',
     flexDirection: 'row'
   },
   modal4CharacterContainer: {
-justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
     height: 300,
     margin: 3,
@@ -734,7 +774,7 @@ justifyContent: 'center',
     flexDirection: 'row'
   },
   modal4buttonContainer: {
-justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
     height: 150,
     margin: 3,
@@ -745,6 +785,34 @@ justifyContent: 'center',
     margin: 3,
     flexDirection: 'column'
   },
+  modal5: {
+    margin: 3,
+    flexDirection: 'column'
+  },
+  modal5TopicContainer:{
+ justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
+    margin: 3,
+    backgroundColor: "red",
+    flexDirection: 'row'
+  }, 
+  modal5RankContainer:{
+   justifyContent: 'center',
+    alignItems: 'center',
+    height: 500,
+    margin: 3,
+    backgroundColor: "green",
+    flexDirection: 'row'
+  },
+  modal5buttonContainer:{
+justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
+    margin: 3,
+    backgroundColor: "blue",
+    flexDirection: 'row'
+  }
 });
 
 AppRegistry.registerComponent('Jowalk039', () => Jowalk039);
