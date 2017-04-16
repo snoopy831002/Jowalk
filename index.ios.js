@@ -27,7 +27,6 @@ import { takeSnapshot } from "react-native-view-shot";
 import SlotMachine from 'react-native-slot-machine';
 import * as Animatable from 'react-native-animatable';
 import Chart from 'react-native-chart';
-import FitImage from 'react-native-fit-image';
 
 export default class Jowalk039 extends Component {
 
@@ -49,6 +48,22 @@ export default class Jowalk039 extends Component {
       global.SQUARE_DIMENSIONS = 30;
       global.coordinates = {StartXcoordinate: '', EndXcoordinate: '',StartYcoordinate: '',EndYcoordinate: ''};
       global.distanceArr = [[]];
+      global.uData=new Array();
+      uData= [
+{'char':"require('./img/characters/char1.png')",'speed':'11.11'},
+{'char':"require('./img/characters/char2.png')",'speed':'22.22'},
+{'char':"require('./img/characters/char3.png')",'speed':'33.33'},
+{'char':"require('./img/characters/char4.png')",'speed':'44.44'},
+{'char':"require('./img/characters/char1.png')",'speed':'55.55'},
+{'char':"require('./img/characters/char2.png')",'speed':'66.66'},
+{'char':"require('./img/characters/char3.png')",'speed':'77.77'},
+{'char':"require('./img/characters/char4.png')",'speed':'88.88'},
+{'char':"require('./img/characters/char1.png')",'speed':'99.99'},
+{'char':"require('./img/characters/char2.png')",'speed':'10.10'},
+{'char':"require('./img/characters/char3.png')",'speed':'11.11'},
+{'char':"require('./img/characters/char4.png')",'speed':'12.12'},
+{'char':"require('./img/characters/char1.png')",'speed':'13.13'}
+      ];
   }
 
   state = {
@@ -56,6 +71,7 @@ export default class Jowalk039 extends Component {
     totalTime : 0,
     totalSteps:0,
     totalCalories:0,
+    currentCharacter: require('./img/characters/char1.png'),
     handloopState : 1,
     encodedSignature: null,
     animationType: 'fade',
@@ -254,27 +270,7 @@ export default class Jowalk039 extends Component {
   }
 
   render() {
-
-    ////
-var THUMB_URLS = [
-  require('./img/characters/char1.png'),
-  require('./img/characters/char1.png'),
-  require('./img/characters/char1.png'),
-  require('./img/characters/char1.png'),
-  require('./img/characters/char1.png'),
-  require('./img/characters/char1.png'),
-  require('./img/characters/char1.png'),
-  require('./img/characters/char1.png'),
-  require('./img/characters/char1.png'),
-  require('./img/characters/char1.png'),
-  require('./img/characters/char1.png'),
-  require('./img/characters/char1.png'),
-];
-
-THUMB_URLS = THUMB_URLS.concat(THUMB_URLS); // double length of THUMB_URLS
-
-var createThumbRow = (uri, i) => <Jowalk039 key={i} source={uri} />;
-    ////
+    var createThumbRow = (uri, i) => <Jowalk039 key={i} source={uri} />;
     const {screenShotSource,error} = this.state;
     var modalBackgroundStyle = {
       backgroundColor: this.state.transparent ? 'rgba(0, 0, 0, 0.5)' : '#f5fcff',
@@ -285,6 +281,29 @@ var createThumbRow = (uri, i) => <Jowalk039 key={i} source={uri} />;
     var activeButtonStyle = {
       backgroundColor: '#ddd'
     };
+    var Ranks = [];
+
+    for(let i = 0; i < uData.length-1; i++){
+      Ranks.push(
+        <View key = {i} style={styles.rankPlacesContainer}>
+          <View style={styles.rankPlace}><Text style={{color:'#FFFFFF',fontSize:50,textAlign: 'center'}}>{i}</Text></View>
+          <View style={styles.rankCharacter}>
+            <Image 
+              source={uData[i].char}
+              style={{width:70,height:70}}
+            />
+          </View>
+          <View style={styles.rankPlaceholder}></View>
+          <View style={styles.rankSprint}>
+            <Image 
+              source={require('./img/sprint.png')}
+              style={{width:70,height:70}}
+            />
+          </View>
+          <View style={styles.rankMinute}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{uData[i].speed}</Text></View>
+        </View>
+      )
+    }
     return (
       <View style={styles.container}>
         <View style={styles.container} ref="full">
@@ -433,28 +452,36 @@ var createThumbRow = (uri, i) => <Jowalk039 key={i} source={uri} />;
                   <View style={styles.modal4CharacterContainer}>
                       <TouchableWithoutFeedback 
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
-                                          this.setState({ RankVisibilityStatus:true});}}>  
+                                          this.setState({ RankVisibilityStatus:true});
+                                          this.setState({ currentCharacter:require('./img/characters/char1.png')});
+                                          saveCurrentUserData("require('./img/characters/char1.png')",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>  
                           <Image 
                             source={require('./img/characters/char1.png')}
                           />
                       </TouchableWithoutFeedback> 
                       <TouchableWithoutFeedback  
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
-                                          this.setState({ RankVisibilityStatus:true});}}> 
+                                          this.setState({ RankVisibilityStatus:true});
+                                          this.setState({ currentCharacter:require('./img/characters/char2.png')});
+                                          saveCurrentUserData("require('./img/characters/char2.png')",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>
                           <Image 
                             source={require('./img/characters/char2.png')}
                           />
                       </TouchableWithoutFeedback> 
                       <TouchableWithoutFeedback   
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
-                                          this.setState({ RankVisibilityStatus:true});}}> 
+                                          this.setState({ RankVisibilityStatus:true});
+                                          this.setState({ currentCharacter:require('./img/characters/char3.png')});
+                                          saveCurrentUserData("require('./img/characters/char3.png')",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>  
                           <Image 
                             source={require('./img/characters/char3.png')}
                           />
                       </TouchableWithoutFeedback> 
                       <TouchableWithoutFeedback  
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
-                                          this.setState({ RankVisibilityStatus:true});}}>   
+                                          this.setState({ RankVisibilityStatus:true});
+                                          this.setState({ currentCharacter:require('./img/characters/char4.png')});
+                                          saveCurrentUserData("require('./img/characters/char4.png')",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}> 
                           <Image 
                             source={require('./img/characters/char4.png')}
                           />
@@ -476,26 +503,7 @@ var createThumbRow = (uri, i) => <Jowalk039 key={i} source={uri} />;
                         bounces={true}
                         style={styles.scrollView}
                         scrollEventThrottle={200}>
-                        <View style={styles.rankPlacesContainer}>
-                          <View style={styles.rankPlace}><Text style={{color:'#FFFFFF',fontSize:50,textAlign: 'center'}}>1</Text></View>
-                          <View style={styles.rankCharacter}>
-                            <Image 
-                              source={require('./img/characters/char1.png')}
-                              style={{width:70,height:70}}
-                            />
-                          </View>
-                          <View style={styles.rankPlaceholder}></View>
-                          <View style={styles.rankSprint}>
-                            <Image 
-                              source={require('./img/sprint.png')}
-                              style={{width:70,height:70}}
-                            />
-                          </View>
-                          <View style={styles.rankMinute}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>6.63 km/hr</Text></View>
-                        </View>
-
-
-                        
+                        {Ranks}
                       </ScrollView>
                   </View>
                   <View style={styles.modal5buttonContainer}>
@@ -741,6 +749,18 @@ function calculateTotalSteps(distance){
   return distance*75;
 }
 
+function saveCurrentUserData(char,speed){
+  var currentUData = new Map();
+  currentUData.set('char', char);
+  currentUData.set('speed', speed);
+  uData.push(currentUData);
+  console.log(uData);
+}
+
+function loadAllUserData(){
+  
+}
+
 const placeholder = {
   uri: './img/1.png',
 };
@@ -916,7 +936,7 @@ const styles = StyleSheet.create({
     height: 500,
     margin: 3,
     //backgroundColor: "green",
-    flexDirection: 'row'
+    flexGrow:1
   },
   modal5buttonContainer:{
     justifyContent: 'center',
@@ -927,7 +947,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   scrollView:{
-    flexDirection: 'row',
+    height:500,
+    flex:1
     //backgroundColor: "red",
   },
   rankPlacesContainer:{
