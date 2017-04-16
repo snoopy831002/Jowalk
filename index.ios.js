@@ -54,6 +54,8 @@ export default class Jowalk039 extends Component {
   state = {
     totalDistance : '',
     totalTime : 0,
+    totalSteps:0,
+    totalCalories:0,
     handloopState : 1,
     encodedSignature: null,
     animationType: 'fade',
@@ -209,8 +211,11 @@ export default class Jowalk039 extends Component {
     this.setState({modalVisible: true});
     var finishJourneyInterval = setInterval(() => { 
       if(!this.state.error){
-        this.setState({ totalDistance: calculateTotalDistance(distanceArr)  });
-        this.setState({ totalTime: calculateTotalTime(distanceArr) });
+        this.setState({ totalDistance: calculateTotalDistance(distanceArr[0]) });
+        console.log('DIS='+calculateTotalDistance(distanceArr[0]));
+        this.setState({ totalTime: calculateTotalTime(distanceArr[0]) });
+        this.setState({ totalSteps: calculateTotalSteps(this.state.totalDistance) });
+        this.setState({ totalCalories: calculateCalories(this.state.totalTime) });
         this.refs.modal1.zoomOut().then((endState) => console.log(endState.finished ? 'zoomOutfinished' : 'zoomOut cancelled'));
         this.setState({ pairingVisibilityStatus: false  });
         this.setState({ slotVisibilityStatus: true });
@@ -355,6 +360,42 @@ var createThumbRow = (uri, i) => <Jowalk039 key={i} source={uri} />;
                       />
                   </View>
                   <View style={styles.modal3statisticContainer}>
+                    <View style={{width:220,height:100,backgroundColor: "red",flexDirection:'row'}}>
+                      <View style={{width:60,height:100,backgroundColor: "pink",justifyContent: 'center',alignItems: 'center'}}>
+                          <Image 
+                            style={{width:60,height:60}}
+                            source={require('./img/time.png')}
+                          />
+                      </View>
+                      <View style={{width:120,height:100,backgroundColor: "green",justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{(this.state.totalTime)*60}</Text></View>
+                    </View>
+                    <View style={{width:220,height:100,backgroundColor: "yellow",flexDirection:'row'}}>
+                      <View style={{width:60,height:100,backgroundColor: "grey",justifyContent: 'center',alignItems: 'center'}}>
+                          <Image 
+                            style={{width:60,height:60}}
+                            source={require('./img/calories.png')}
+                          />
+                      </View>
+                      <View style={{width:120,height:100,backgroundColor: "green",justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{calculateCalories(this.state.totalTime)*60}</Text></View>
+                    </View>
+                    <View style={{width:220,height:100,backgroundColor: "green",flexDirection:'row'}}>
+                      <View style={{width:60,height:100,backgroundColor: "black",justifyContent: 'center',alignItems: 'center'}}>
+                          <Image 
+                            style={{width:60,height:60}}
+                            source={require('./img/speed.png')}
+                          />
+                      </View>
+                      <View style={{width:120,height:100,backgroundColor: "green",justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2)}</Text></View>
+                    </View>
+                    <View style={{width:220,height:100,backgroundColor: "blue",flexDirection:'row'}}>
+                      <View style={{width:60,height:100,backgroundColor: "white",justifyContent: 'center',alignItems: 'center'}}>
+                          <Image 
+                            style={{width:60,height:60}}
+                            source={require('./img/step.png')}
+                          />
+                      </View>
+                      <View style={{width:120,height:100,backgroundColor: "green",justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{parseInt(this.state.totalDistance*20*75)}</Text></View>
+                    </View>
                   </View>
                   <View style={styles.modal3buttonContainer}>
                     <TouchableWithoutFeedback 
@@ -677,17 +718,27 @@ function calculateDistance(InX,OutX,InY,OutY){
 }
 
 function calculateTotalTime(arr){
-  return arr.length;
+  return arr.length/60;
 }
 
 function calculateTotalDistance(arr){
   var totalDistance = 0;
   arr.forEach(function (value) {
-    totalDistance +=  value;
-    //console.log(value);
+    totalDistance +=  value[1];
   });
-  
-  return totalDistance/30;
+  return (totalDistance/30)*0.05;
+}
+
+function calculateAverageSpeed(time,distance){
+  return distance/time;
+}
+
+function calculateCalories(time){
+  return time*7.5;
+}
+
+function calculateTotalSteps(distance){
+  return distance*75;
 }
 
 const placeholder = {
@@ -899,25 +950,21 @@ const styles = StyleSheet.create({
     height: 70,
     width:85,
     backgroundColor: "orange",
-    //margin: 2,
   },
   rankPlaceholder:{
     height: 70,
     width:520,
     backgroundColor: "yellow",
-    //margin: 2,
   },
   rankSprint:{
     height: 70,
     width:85,
     backgroundColor: "green",
-    //margin: 2,
   },
   rankMinute:{
     height: 70,
     width:190,
     backgroundColor: "blue",
-    //margin: 2,
   },
 });
 
