@@ -239,7 +239,6 @@ export default class Jowalk039 extends Component {
         this.setState({ totalTime: calculateTotalTime(distanceArr[0]) });
         this.setState({ totalSteps: calculateTotalSteps(this.state.totalDistance) });
         this.setState({ totalCalories: calculateCalories(this.state.totalTime) });
-        this.refs.modal1.zoomOut().then((endState) => console.log(endState.finished ? 'zoomOutfinished' : 'zoomOut cancelled'));
         this.setState({ pairingVisibilityStatus: false  });
         this.setState({ slotVisibilityStatus: true });
         clearInterval(finishJourneyInterval);
@@ -292,43 +291,42 @@ export default class Jowalk039 extends Component {
     var Ranks = [];
     for(let i = 0; i < uData.length; i++){
       if(uData[i].selected) {
-
-            Ranks.push(
-            <View key = {i} style={styles.rankPlacesContainerSelected}>
-              <View style={styles.rankPlace}><Text style={{color:'#FFFFFF',fontSize:50,textAlign: 'center'}}>{i+1}</Text></View>
-              <View style={styles.rankCharacter}>
-                <Image 
-                  source={charIcons[uData[i].char].image}
-                  style={{width:70,height:70}}
-                />
-              </View>
-              <View style={styles.rankPlaceholder}></View>
-              <View style={styles.rankSprint}>
-                <Image 
-                  source={require('./img/sprint.png')}
-                  style={{width:40,height:40}}
-                />
-              </View>
-              <View style={styles.rankMinute}><Text style={{color:'#FFFFFF',fontSize:30,textAlign: 'center'}}>{uData[i].speed}</Text></View>
+        Ranks.push(
+          <View key = {i} style={styles.rankPlacesContainerSelected}>
+            <View style={styles.rankPlace}><Text style={{color:'#FFFFFF',fontSize:50,textAlign: 'center'}}>{i+1}</Text></View>
+            <View style={styles.rankCharacter}>
+              <Image 
+                source={charIcons[uData[i].char].image}
+                style={{width:70,height:70}}
+              />
             </View>
-          )
+            <View style={styles.rankPlaceholder}></View>
+            <View style={styles.rankSprint}>
+              <Image 
+                source={require('./img/sprint.png')}
+                style={{width:40,height:40}}
+              />
+            </View>
+            <View style={styles.rankMinute}><Text style={{color:'#FFFFFF',fontSize:30,textAlign: 'center'}}>{uData[i].speed}</Text></View>
+          </View>
+        )
       }
       else {
-              Ranks.push(
-              <View key = {i} style={styles.rankPlacesContainer}>
-                <View style={styles.rankPlace}><Text style={{color:'#FFFFFF',fontSize:50,textAlign: 'center'}}>{i+1}</Text></View>
-                <View style={styles.rankCharacter}>
-                </View>
-                <View style={styles.rankPlaceholder}></View>
-                <View style={styles.rankSprint}>
-                  <Image 
-                    source={require('./img/sprint.png')}
-                    style={{width:40,height:40}}
-                  />
-                </View>
-                <View style={styles.rankMinute}><Text style={{color:'#FFFFFF',fontSize:30,textAlign: 'center'}}>{uData[i].speed}</Text></View>
-              </View>
-            )
+        Ranks.push(
+          <View key = {i} style={styles.rankPlacesContainer}>
+            <View style={styles.rankPlace}><Text style={{color:'#FFFFFF',fontSize:50,textAlign: 'center'}}>{i+1}</Text></View>
+            <View style={styles.rankCharacter}>
+              <Image 
+                source={charIcons[uData[i].char].image}
+                style={{width:70,height:70}}
+              />
+            </View>
+            <View style={styles.rankPlaceholder}></View>
+            <View style={styles.rankSprint}>
+            </View>
+            <View style={styles.rankMinute}><Text style={{color:'#FFFFFF',fontSize:30,textAlign: 'center'}}>{uData[i].speed}</Text></View>
+          </View>
+        )
       }
       console.log(uData);
       
@@ -538,7 +536,14 @@ export default class Jowalk039 extends Component {
                   <View style={styles.modal5buttonContainer}>
                     <TouchableWithoutFeedback 
                       onPressIn={()=>{this.setState({  playAgainUri:require('./img/playAgainHit.png')});}}
-                      onPress={()=>{this.setState({  playAgainUri:require('./img/playAgain.png')});}}>
+                      onPress={()=>{this.setState({  playAgainUri:require('./img/playAgain.png')});
+                      this.setState({ RankVisibilityStatus:false });
+                      this.setState({ pairingVisibilityStatus:true });
+                      this.clear();
+                      for(let i = 0; i < uData.length; i++){
+                        uData[i].selected = 0 ;
+                      };
+                      this.setState({modalVisible: false});}}>
                         <View>
                           <Image 
                             style={{width:252,height:94}}
@@ -738,13 +743,14 @@ export default class Jowalk039 extends Component {
             source={require('./img/hand.png')}
           />
         </View>
-        <TouchableHighlight 
-          visible={this.state.modalVisible}
-          style={ !this.state.hide ? styles.addButton : styles.addButton2 }
-          underlayColor='#ff7043' 
-          onPress={this.finishJourney}>
-          <Text style={{color: 'white'}}>結束旅程</Text>
-        </TouchableHighlight>
+        {renderIf(!this.state.modalVisible)(
+          <TouchableHighlight 
+            style={ styles.addButton}
+            underlayColor='#ff7043' 
+            onPress={this.finishJourney}>
+            <Text style={{color: 'white'}}>結束旅程</Text>
+          </TouchableHighlight>
+        )}
       </View>
     );
   }
@@ -780,10 +786,6 @@ function calculateTotalSteps(distance){
 
 function saveCurrentUserData(char,speed){
   uData.push({'char':char,'speed':speed,'selected':1});
-}
-
-function loadAllUserData(){
-  
 }
 
 const placeholder = {
