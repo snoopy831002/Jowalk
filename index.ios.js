@@ -50,19 +50,19 @@ export default class Jowalk039 extends Component {
       global.distanceArr = [[]];
       global.uData=new Array();
       uData= [
-{'char':"0",'speed':'11.11'},
-{'char':"1",'speed':'22.22'},
-{'char':"2",'speed':'33.33'},
-{'char':"3",'speed':'44.44'},
-{'char':"0",'speed':'55.55'},
-{'char':"2",'speed':'66.66'},
-{'char':"3",'speed':'77.77'},
-{'char':"0",'speed':'88.88'},
-{'char':"1",'speed':'99.99'},
-{'char':"2",'speed':'10.10'},
-{'char':"3",'speed':'15.11'},
-{'char':"2",'speed':'12.12'},
-{'char':"3",'speed':'13.13'}
+{'char':"0",'speed':'11.11','selected':0},
+{'char':"1",'speed':'22.22','selected':0},
+{'char':"2",'speed':'33.33','selected':0},
+{'char':"3",'speed':'44.44','selected':0},
+{'char':"0",'speed':'55.55','selected':0},
+{'char':"2",'speed':'66.66','selected':0},
+{'char':"3",'speed':'77.77','selected':0},
+{'char':"0",'speed':'88.88','selected':0},
+{'char':"1",'speed':'99.99','selected':0},
+{'char':"2",'speed':'10.10','selected':0},
+{'char':"3",'speed':'15.11','selected':0},
+{'char':"2",'speed':'12.12','selected':0},
+{'char':"3",'speed':'13.13','selected':0}
       ];
       global.charIcons=new Array();
       charIcons = [  
@@ -79,6 +79,7 @@ export default class Jowalk039 extends Component {
     totalSteps:0,
     totalCalories:0,
     currentCharacter: require('./img/characters/char1.png'),
+    currentAverageSpeed: 0,
     handloopState : 1,
     encodedSignature: null,
     animationType: 'fade',
@@ -290,25 +291,47 @@ export default class Jowalk039 extends Component {
     uData.sort(function(a,b) {return (a.speed < b.speed) ? 1 : ((b.speed < a.speed) ? -1 : 0);} );
     var Ranks = [];
     for(let i = 0; i < uData.length; i++){
-      Ranks.push(
-        <View key = {i} style={styles.rankPlacesContainer}>
-          <View style={styles.rankPlace}><Text style={{color:'#FFFFFF',fontSize:50,textAlign: 'center'}}>{i+1}</Text></View>
-          <View style={styles.rankCharacter}>
-            <Image 
-              source={charIcons[uData[i].char].image}
-              style={{width:70,height:70}}
-            />
-          </View>
-          <View style={styles.rankPlaceholder}></View>
-          <View style={styles.rankSprint}>
-            <Image 
-              source={require('./img/sprint.png')}
-              style={{width:70,height:70}}
-            />
-          </View>
-          <View style={styles.rankMinute}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{uData[i].speed}</Text></View>
-        </View>
-      )
+      if(uData[i].selected) {
+
+            Ranks.push(
+            <View key = {i} style={styles.rankPlacesContainerSelected}>
+              <View style={styles.rankPlace}><Text style={{color:'#FFFFFF',fontSize:50,textAlign: 'center'}}>{i+1}</Text></View>
+              <View style={styles.rankCharacter}>
+                <Image 
+                  source={charIcons[uData[i].char].image}
+                  style={{width:70,height:70}}
+                />
+              </View>
+              <View style={styles.rankPlaceholder}></View>
+              <View style={styles.rankSprint}>
+                <Image 
+                  source={require('./img/sprint.png')}
+                  style={{width:40,height:40}}
+                />
+              </View>
+              <View style={styles.rankMinute}><Text style={{color:'#FFFFFF',fontSize:30,textAlign: 'center'}}>{uData[i].speed}</Text></View>
+            </View>
+          )
+      }
+      else {
+              Ranks.push(
+              <View key = {i} style={styles.rankPlacesContainer}>
+                <View style={styles.rankPlace}><Text style={{color:'#FFFFFF',fontSize:50,textAlign: 'center'}}>{i+1}</Text></View>
+                <View style={styles.rankCharacter}>
+                </View>
+                <View style={styles.rankPlaceholder}></View>
+                <View style={styles.rankSprint}>
+                  <Image 
+                    source={require('./img/sprint.png')}
+                    style={{width:40,height:40}}
+                  />
+                </View>
+                <View style={styles.rankMinute}><Text style={{color:'#FFFFFF',fontSize:30,textAlign: 'center'}}>{uData[i].speed}</Text></View>
+              </View>
+            )
+      }
+      console.log(uData);
+      
     }
     return (
       <View style={styles.container}>
@@ -756,7 +779,7 @@ function calculateTotalSteps(distance){
 }
 
 function saveCurrentUserData(char,speed){
-  uData.push({'char':char,'speed':speed});
+  uData.push({'char':char,'speed':speed,'selected':1});
 }
 
 function loadAllUserData(){
@@ -953,7 +976,7 @@ const styles = StyleSheet.create({
     flex:1
     //backgroundColor: "red",
   },
-  rankPlacesContainer:{
+  rankPlacesContainerSelected:{
     height: 90,
     width:960,
     //backgroundColor: "blue",
@@ -964,30 +987,44 @@ const styles = StyleSheet.create({
     borderColor: '#E8843C',
     flexDirection: 'row'
   },
+  rankPlacesContainer:{
+    height: 90,
+    width:960,
+    //backgroundColor: "blue",
+    margin: 3,
+    padding: 2,
+    flexDirection: 'row'
+  },
   rankPlace:{
     height: 70,
     width:60,
-    backgroundColor: "red",
+    //backgroundColor: "red",
   },
   rankCharacter:{
     height: 70,
     width:85,
-    backgroundColor: "orange",
+    //backgroundColor: "orange",
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   rankPlaceholder:{
     height: 70,
     width:520,
-    backgroundColor: "yellow",
+    //backgroundColor: "yellow",
   },
   rankSprint:{
     height: 70,
     width:85,
-    backgroundColor: "green",
+    //backgroundColor: "green",
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   rankMinute:{
     height: 70,
     width:190,
-    backgroundColor: "blue",
+    //backgroundColor: "blue",
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 });
 
