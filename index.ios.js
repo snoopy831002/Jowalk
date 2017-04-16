@@ -50,20 +50,27 @@ export default class Jowalk039 extends Component {
       global.distanceArr = [[]];
       global.uData=new Array();
       uData= [
-{'char':"require('./img/characters/char1.png')",'speed':'11.11'},
-{'char':"require('./img/characters/char2.png')",'speed':'22.22'},
-{'char':"require('./img/characters/char3.png')",'speed':'33.33'},
-{'char':"require('./img/characters/char4.png')",'speed':'44.44'},
-{'char':"require('./img/characters/char1.png')",'speed':'55.55'},
-{'char':"require('./img/characters/char2.png')",'speed':'66.66'},
-{'char':"require('./img/characters/char3.png')",'speed':'77.77'},
-{'char':"require('./img/characters/char4.png')",'speed':'88.88'},
-{'char':"require('./img/characters/char1.png')",'speed':'99.99'},
-{'char':"require('./img/characters/char2.png')",'speed':'10.10'},
-{'char':"require('./img/characters/char3.png')",'speed':'11.11'},
-{'char':"require('./img/characters/char4.png')",'speed':'12.12'},
-{'char':"require('./img/characters/char1.png')",'speed':'13.13'}
+{'char':"0",'speed':'11.11'},
+{'char':"1",'speed':'22.22'},
+{'char':"2",'speed':'33.33'},
+{'char':"3",'speed':'44.44'},
+{'char':"0",'speed':'55.55'},
+{'char':"2",'speed':'66.66'},
+{'char':"3",'speed':'77.77'},
+{'char':"0",'speed':'88.88'},
+{'char':"1",'speed':'99.99'},
+{'char':"2",'speed':'10.10'},
+{'char':"3",'speed':'15.11'},
+{'char':"2",'speed':'12.12'},
+{'char':"3",'speed':'13.13'}
       ];
+      global.charIcons=new Array();
+      charIcons = [  
+      {image: require('./img/characters/char1.png')},
+      {image: require('./img/characters/char2.png')},
+      {image: require('./img/characters/char3.png')},
+      {image: require('./img/characters/char4.png')}
+    ];
   }
 
   state = {
@@ -228,7 +235,6 @@ export default class Jowalk039 extends Component {
     var finishJourneyInterval = setInterval(() => { 
       if(!this.state.error){
         this.setState({ totalDistance: calculateTotalDistance(distanceArr[0]) });
-        console.log('DIS='+calculateTotalDistance(distanceArr[0]));
         this.setState({ totalTime: calculateTotalTime(distanceArr[0]) });
         this.setState({ totalSteps: calculateTotalSteps(this.state.totalDistance) });
         this.setState({ totalCalories: calculateCalories(this.state.totalTime) });
@@ -253,7 +259,6 @@ export default class Jowalk039 extends Component {
 
   handlePressOut(){
     clearInterval(Interval);
-    console.log(distanceArr);
   }
 
   handleOnMove(e) {
@@ -270,6 +275,7 @@ export default class Jowalk039 extends Component {
   }
 
   render() {
+    console.log('in render');
     var createThumbRow = (uri, i) => <Jowalk039 key={i} source={uri} />;
     const {screenShotSource,error} = this.state;
     var modalBackgroundStyle = {
@@ -281,15 +287,15 @@ export default class Jowalk039 extends Component {
     var activeButtonStyle = {
       backgroundColor: '#ddd'
     };
+    uData.sort(function(a,b) {return (a.speed < b.speed) ? 1 : ((b.speed < a.speed) ? -1 : 0);} );
     var Ranks = [];
-
-    for(let i = 0; i < uData.length-1; i++){
+    for(let i = 0; i < uData.length; i++){
       Ranks.push(
         <View key = {i} style={styles.rankPlacesContainer}>
-          <View style={styles.rankPlace}><Text style={{color:'#FFFFFF',fontSize:50,textAlign: 'center'}}>{i}</Text></View>
+          <View style={styles.rankPlace}><Text style={{color:'#FFFFFF',fontSize:50,textAlign: 'center'}}>{i+1}</Text></View>
           <View style={styles.rankCharacter}>
             <Image 
-              source={uData[i].char}
+              source={charIcons[uData[i].char].image}
               style={{width:70,height:70}}
             />
           </View>
@@ -454,7 +460,7 @@ export default class Jowalk039 extends Component {
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
                                           this.setState({ currentCharacter:require('./img/characters/char1.png')});
-                                          saveCurrentUserData("require('./img/characters/char1.png')",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>  
+                                          saveCurrentUserData("0",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>  
                           <Image 
                             source={require('./img/characters/char1.png')}
                           />
@@ -463,7 +469,7 @@ export default class Jowalk039 extends Component {
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
                                           this.setState({ currentCharacter:require('./img/characters/char2.png')});
-                                          saveCurrentUserData("require('./img/characters/char2.png')",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>
+                                          saveCurrentUserData("1",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>
                           <Image 
                             source={require('./img/characters/char2.png')}
                           />
@@ -472,7 +478,7 @@ export default class Jowalk039 extends Component {
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
                                           this.setState({ currentCharacter:require('./img/characters/char3.png')});
-                                          saveCurrentUserData("require('./img/characters/char3.png')",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>  
+                                          saveCurrentUserData("2",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>  
                           <Image 
                             source={require('./img/characters/char3.png')}
                           />
@@ -481,7 +487,7 @@ export default class Jowalk039 extends Component {
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
                                           this.setState({ currentCharacter:require('./img/characters/char4.png')});
-                                          saveCurrentUserData("require('./img/characters/char4.png')",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}> 
+                                          saveCurrentUserData("3",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}> 
                           <Image 
                             source={require('./img/characters/char4.png')}
                           />
@@ -750,11 +756,7 @@ function calculateTotalSteps(distance){
 }
 
 function saveCurrentUserData(char,speed){
-  var currentUData = new Map();
-  currentUData.set('char', char);
-  currentUData.set('speed', speed);
-  uData.push(currentUData);
-  console.log(uData);
+  uData.push({'char':char,'speed':speed});
 }
 
 function loadAllUserData(){
