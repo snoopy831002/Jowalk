@@ -49,21 +49,6 @@ export default class Jowalk039 extends Component {
       global.coordinates = {StartXcoordinate: '', EndXcoordinate: '',StartYcoordinate: '',EndYcoordinate: ''};
       global.distanceArr = [[]];
       global.uData=new Array();
-      uData= [
-{'char':"0",'speed':'11.11','selected':0},
-{'char':"1",'speed':'22.22','selected':0},
-{'char':"2",'speed':'33.33','selected':0},
-{'char':"3",'speed':'44.44','selected':0},
-{'char':"0",'speed':'55.55','selected':0},
-{'char':"2",'speed':'66.66','selected':0},
-{'char':"3",'speed':'77.77','selected':0},
-{'char':"0",'speed':'88.88','selected':0},
-{'char':"1",'speed':'99.99','selected':0},
-{'char':"2",'speed':'10.10','selected':0},
-{'char':"3",'speed':'15.11','selected':0},
-{'char':"2",'speed':'12.12','selected':0},
-{'char':"3",'speed':'13.13','selected':0}
-      ];
       global.charIcons=new Array();
       charIcons = [  
       {image: require('./img/characters/char1.png')},
@@ -157,11 +142,11 @@ export default class Jowalk039 extends Component {
     if(this.state.handloopState){
       Animated.sequence([
           Animated.spring(this.state.pan, {
-            toValue: {x: 200, y: 100},
+            toValue: {x: 300, y: 80},
             duration: 4000,    
           }),
           Animated.spring(this.state.pan, {
-            toValue: {x: 100, y: 80},
+            toValue: {x: 100, y: 70},
             duration: 4000,    
           })
       ]).start(event => {
@@ -362,7 +347,7 @@ export default class Jowalk039 extends Component {
                             source={screenShotSource}
                       /> }
                       <View style={[styles.slotContainer]}>   
-                        <SlotMachine text="d" padding='1' range="abcd" />
+                        <SlotMachine text="l" padding='1' range="abcdefghijklm" />
                       </View> 
                     </View> 
                     <View style={styles.modal2buttonContainer}>
@@ -390,57 +375,64 @@ export default class Jowalk039 extends Component {
                   <View style={styles.modal3TopContainer}>
                   </View>
                   <View style={styles.chartContainer}>
+                    <View style={styles.cccc}>
                       <Chart
                         style={styles.chart}
                         data={distanceArr}
                         showDataPoint={true}
-                        color={['#02F78E']}
-                        axisColor='#6A6AFF'
+                        color={['#E8843C']}
+                        axisColor='#FFF'
                         hideHorizontalGridLines={true}
-                        hideVerticalGridLines={true}
+                        hideVerticalGridLines={false}
+                        gridColor='#FFF'
+                        axisLabelColor='#FFF'
+                        lineWidth={3}
+                        showAxis={true}
                         dataPointFillColor={['rgba(0,0,0,0)']}
                         dataPointColor={['rgba(0,0,0,0)']}
                         xAxisHeight={50}
                         showXAxisLabels={true}
                         type="line"
                       />
+                    </View>
+                    <View style={styles.chartColor}></View>
                   </View>
                   <View style={styles.modal3statisticContainer}>
-                    <View style={{width:220,height:100,backgroundColor: "red",flexDirection:'row'}}>
-                      <View style={{width:60,height:100,backgroundColor: "pink",justifyContent: 'center',alignItems: 'center'}}>
+                    <View style={{width:220,height:100,flexDirection:'row'}}>
+                      <View style={{width:60,height:100,justifyContent: 'center',alignItems: 'center'}}>
                           <Image 
                             style={{width:60,height:60}}
                             source={require('./img/time.png')}
                           />
                       </View>
-                      <View style={{width:120,height:100,backgroundColor: "green",justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{(this.state.totalTime)*60}</Text></View>
+                      <View style={{width:120,height:100,justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{(this.state.totalTime)*60}</Text></View>
                     </View>
-                    <View style={{width:220,height:100,backgroundColor: "yellow",flexDirection:'row'}}>
-                      <View style={{width:60,height:100,backgroundColor: "grey",justifyContent: 'center',alignItems: 'center'}}>
+                    <View style={{width:220,height:100,flexDirection:'row'}}>
+                      <View style={{width:60,height:100,justifyContent: 'center',alignItems: 'center'}}>
                           <Image 
                             style={{width:60,height:60}}
                             source={require('./img/calories.png')}
                           />
                       </View>
-                      <View style={{width:120,height:100,backgroundColor: "green",justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{calculateCalories(this.state.totalTime)*60}</Text></View>
+                      <View style={{width:120,height:100,justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{calculateCalories(this.state.totalTime)*60}</Text></View>
                     </View>
-                    <View style={{width:220,height:100,backgroundColor: "green",flexDirection:'row'}}>
-                      <View style={{width:60,height:100,backgroundColor: "black",justifyContent: 'center',alignItems: 'center'}}>
+                    <View style={{width:220,height:100,flexDirection:'row'}}>
+                      <View style={{width:60,height:100,justifyContent: 'center',alignItems: 'center'}}>
                           <Image 
                             style={{width:60,height:60}}
                             source={require('./img/speed.png')}
                           />
                       </View>
-                      <View style={{width:120,height:100,backgroundColor: "green",justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2)}</Text></View>
+                      <View style={{width:120,height:100,justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2)}</Text></View>
                     </View>
-                    <View style={{width:220,height:100,backgroundColor: "blue",flexDirection:'row'}}>
-                      <View style={{width:60,height:100,backgroundColor: "white",justifyContent: 'center',alignItems: 'center'}}>
+                    <View style={{width:220,height:100,flexDirection:'row'}}>
+                      <View style={{width:60,height:100,justifyContent: 'center',alignItems: 'center'}}>
                           <Image 
                             style={{width:60,height:60}}
                             source={require('./img/step.png')}
                           />
                       </View>
-                      <View style={{width:120,height:100,backgroundColor: "green",justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{parseInt(this.state.totalDistance*20*75)}</Text></View>
+                      <View style={{width:120,height:100,justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{parseInt(this.state.totalDistance*20*75)}</Text></View>
                     </View>
                   </View>
                   <View style={styles.modal3buttonContainer}>
@@ -539,6 +531,7 @@ export default class Jowalk039 extends Component {
                       onPress={()=>{this.setState({  playAgainUri:require('./img/playAgain.png')});
                       this.setState({ RankVisibilityStatus:false });
                       this.setState({ pairingVisibilityStatus:true });
+                      this.setState({ handloopState:true });
                       this.clear();
                       for(let i = 0; i < uData.length; i++){
                         uData[i].selected = 0 ;
@@ -571,177 +564,179 @@ export default class Jowalk039 extends Component {
             style={styles.sketch}
           />
           <Image
-            style={{height: 105*0.8 ,width: 65*0.8 , position: 'absolute',top:25,left:-5,zIndex: 1}}
+            style={{height: 105*0.9 ,width: 65*0.9 , position: 'absolute',top:25,left:0,zIndex: 1}}
             source={require('./img/map/1.png')}
           />
           <Image
-            style={{height:161*0.8 ,width: 37*0.8,position: 'absolute',top:135,left:-5,zIndex: 1}}
+            style={{height:161*0.9 ,width: 37*0.9,position: 'absolute',top:135,left:0,zIndex: 1}}
             source={require('./img/map/2.png')}
           />
           <Image
-            style={{height:117*0.8 ,width:105*0.8,position: 'absolute',top:25,left:50,zIndex: 1}}
+            style={{height:117*0.9,width:105*0.9,position: 'absolute',top:25,left:65,zIndex: 1}}
             source={require('./img/map/3.png')}
           />
           <Image
-            style={{height: 435*0.8,width: 132*0.8,position: 'absolute',top:140,left:0,zIndex: 1}}
+            style={{height: 435,width: 132,position: 'absolute',top:150,left:0,zIndex: 1}}
             source={require('./img/map/4.png')}
           />
           <Image
-            style={{height: 201*0.8,width: 46*0.8,position: 'absolute',top:550,left:-5,zIndex: 1}}
+            style={{height: 201*0.9,width: 46*0.9,position: 'absolute',bottom:-5,left:0,zIndex: 1}}
             source={require('./img/map/5.png')}
           />
           <Image
-            style={{height: 18*0.8,width: 84*0.8,position: 'absolute',top:25,left:310,zIndex: 1}}
+            style={{height: 18*0.9,width: 84*0.9,position: 'absolute',top:25,left:295,zIndex: 1}}
             source={require('./img/map/6.png')}
           />
           <Image
-            style={{height: 142*0.8,width: 300*0.8,position: 'absolute',top:25,left:145,zIndex: 1}}
+            style={{height: 142*0.9,width: 300*0.9,position: 'absolute',top:25,left:200,zIndex: 1}}
             source={require('./img/map/7.png')}
           />
           <Image
-            style={{height: 128*0.8,width: 327*0.8,position: 'absolute',top:155,left:120,zIndex: 1}}
+            style={{height: 128*0.9,width: 327*0.9,position: 'absolute',top:155,left:175,zIndex: 1}}
             source={require('./img/map/8.png')}
           />
           <Image
-            style={{height: 39*0.8,width: 225*0.8,position: 'absolute',top:225,left:160,zIndex: 1}}
+            style={{height: 39*0.9,width: 225*0.9,position: 'absolute',top:230,left:215,zIndex: 1}}
             source={require('./img/map/9.png')}
           />
           <Image
-            style={{height: 46*0.8,width: 267*0.8,position: 'absolute',top:270,left:140,zIndex: 1}}
+            style={{height: 46*0.9,width: 267*0.9,position: 'absolute',top:310,left:195,zIndex: 1}}
             source={require('./img/map/10.png')}
           />
           <Image
-            style={{height: 121*0.8,width: 313*0.8,position: 'absolute',top:280,left:100,zIndex: 1}}
+            style={{height: 121*0.9,width: 313*0.9,position: 'absolute',top:300,left:150,zIndex: 1}}
             source={require('./img/map/11.png')}
           />
           <Image
-            style={{height: 137*0.8,width: 316*0.8,position: 'absolute',top:380,left:80,zIndex: 1}}
+            style={{height: 137*0.9,width: 316*0.9,position: 'absolute',top:390,left:135,zIndex: 1}}
             source={require('./img/map/12.png')}
           />
           <Image
-            style={{height: 142*0.8,width: 311*0.8,position: 'absolute',top:500,left:65,zIndex: 1}}
+            style={{height: 142*0.9,width: 311*0.9,position: 'absolute',top:490,left:115,zIndex: 1}}
             source={require('./img/map/13.png')}
           />
           <Image
-            style={{height: 191*0.8,width: 321*0.8,position: 'absolute',top:615,left:35,zIndex: 1}}
+            style={{height: 191*0.9,width: 321*0.9,position: 'absolute',bottom:0,left:85,zIndex: 1}}
             source={require('./img/map/14.png')}
           />
           <Image
-            style={{height: 59*0.8,width: 180*0.8,position: 'absolute',top:730,left:130,zIndex: 1}}
+            style={{height: 59*0.9,width: 180*0.9,position: 'absolute',bottom:0,left:210,zIndex: 1}}
             source={require('./img/map/15.png')}
           />
           <Image
-            style={{height: 20*0.8,width: 33*0.8,position: 'absolute',top:25,left:400,zIndex: 1}}
+            style={{height: 20*0.9,width: 33*0.9,position: 'absolute',top:25,left:500,zIndex: 1}}
             source={require('./img/map/16.png')}
           />
           <Image
-            style={{height: 18*0.8,width: 50*0.8,position: 'absolute',top:25,left:440,zIndex: 1}}
+            style={{height: 18*0.9,width: 50*0.9,position: 'absolute',top:25,left:560,zIndex: 1}}
             source={require('./img/map/17.png')}
           />
           <Image
-            style={{height: 17*0.8,width: 50*0.8,position: 'absolute',top:25,left:490,zIndex: 1}}
+            style={{height: 17*0.9,width: 50*0.9,position: 'absolute',top:25,left:620,zIndex: 1}}
             source={require('./img/map/18.png')}
           />
          <Image
-            style={{height: 15*0.8,width: 17*0.8,position: 'absolute',top:25,left:540,zIndex: 1}}
+            style={{height: 15*0.9,width: 17*0.9,position: 'absolute',top:25,left:670,zIndex: 1}}
             source={require('./img/map/19.png')}
           />
           <Image
-            style={{height: 15*0.8,width: 44*0.8,position: 'absolute',top:25,left:565,zIndex: 1}}
+            style={{height: 15*0.9,width: 44*0.9,position: 'absolute',top:25,left:690,zIndex: 1}}
             source={require('./img/map/20.png')}
           />
           <Image
-            style={{height: 59*0.8,width: 134*0.8,position: 'absolute',top:50,left:445,zIndex: 1}}
+            style={{height: 59*0.9,width: 134*0.9,position: 'absolute',top:50,left:550,zIndex: 1}}
             source={require('./img/map/21.png')}
           />
           <Image
-            style={{height: 143*0.8,width: 237*0.8,position: 'absolute',top:50,left:405,zIndex: 1}}
+            style={{height: 143*0.9,width: 237*0.9,position: 'absolute',top:50,left:510,zIndex: 1}}
             source={require('./img/map/22.png')}
           />
           <Image
-            style={{height: 134*0.8,width: 214*0.8,position: 'absolute',top:170,left:390,zIndex: 1}}
+            style={{height: 134*0.9,width: 214*0.9,position: 'absolute',top:180,left:500,zIndex: 1}}
             source={require('./img/map/23.png')}
           />
           <Image
-            style={{height: 123*0.8,width: 202*0.8,position: 'absolute',top:280,left:370,zIndex: 1}}
+            style={{height: 123*0.9,width: 202*0.9,position: 'absolute',top:290,left:470,zIndex: 1}}
             source={require('./img/map/24.png')}
           />
           <Image
-            style={{height: 126*0.8,width: 213*0.8,position: 'absolute',top:385,left:345,zIndex: 1}}
+            style={{height: 126*0.9,width: 213*0.9,position: 'absolute',top:390,left:450,zIndex: 1}}
             source={require('./img/map/25.png')}
           />
           <Image
-            style={{height: 127*0.8,width: 213*0.8,position: 'absolute',top:480,left:330,zIndex: 1}}
+            style={{height: 127*0.9,width: 213*0.9,position: 'absolute',top:500,left:430,zIndex: 1}}
             source={require('./img/map/26.png')}
           />
           <Image
-            style={{height: 121*0.8,width: 212*0.8,position: 'absolute',top:580,left:310,zIndex: 1}}
+            style={{height: 121*0.9,width: 212*0.9,position: 'absolute',top:620,left:410,zIndex: 1}}
             source={require('./img/map/27.png')}
           />
          <Image
-            style={{height: 34*0.8,width: 199*0.8,position: 'absolute',top:745,left:280,zIndex: 1}}
+            style={{height: 34*0.9,width: 199*0.9,position: 'absolute',bottom:0,left:400,zIndex: 1}}
             source={require('./img/map/28.png')}
           />
          <Image
-            style={{height: 40*0.8,width: 149*0.8,position: 'absolute',top:25,left:620,zIndex: 1}}
+            style={{height: 40*0.9,width: 149*0.9,position: 'absolute',top:25,right:140,zIndex: 1}}
             source={require('./img/map/29.png')}
           />
          <Image
-            style={{height: 48*0.8,width: 53*0.8,position: 'absolute',top:25,left:750,zIndex: 1}}
+            style={{height: 48*0.9,width: 53*0.9,position: 'absolute',top:25,right:90,zIndex: 1}}
             source={require('./img/map/30.png')}
           />
          <Image
-            style={{height: 60*0.8,width: 79*0.8,position: 'absolute',top:25,left:810,zIndex: 1}}
+            style={{height: 60*0.9,width: 79*0.9,position: 'absolute',top:25,right:10,zIndex: 1}}
             source={require('./img/map/31.png')}
           />
          <Image
-            style={{height: 85*0.8,width: 184*0.8,position: 'absolute',top:50,left:610,zIndex: 1}}
+            style={{height: 85*0.9,width: 184*0.9,position: 'absolute',top:80,right:120,zIndex: 1}}
             source={require('./img/map/32.png')}
           />
          <Image
-            style={{height: 59*0.8,width: 113*0.8,position: 'absolute',top:70,left:770,zIndex: 1}}
+            style={{height: 59*0.9,width: 113*0.9,position: 'absolute',top:110,right:10,zIndex: 1}}
             source={require('./img/map/33.png')}
           />
          <Image
-            style={{height: 119*0.8,width: 309*0.8,position: 'absolute',top:120,left:600,zIndex: 1}}
+            style={{height: 119*0.9,width: 309*0.9,position: 'absolute',top:150,right:25,zIndex: 1}}
             source={require('./img/map/34.png')}
           />
          <Image
-            style={{height: 139*0.8,width: 242*0.8,position: 'absolute',top:200,left:570,zIndex: 1}}
+            style={{height: 139*0.9,width: 242*0.9,position: 'absolute',top:240,right:120,zIndex: 1}}
             source={require('./img/map/35.png')}
           />
          <Image
-            style={{height: 465*0.8,width: 400*0.8,position: 'absolute',top:240,left:520,zIndex: 1}}
+            style={{height: 465*0.9,width: 400*0.9,position: 'absolute',top:270,right:40,zIndex: 1}}
             source={require('./img/map/36.png')}
           />
          <Image
-            style={{height: 113*0.8,width: 458*0.8,position: 'absolute',top:600,left:490,zIndex: 1}}
+            style={{height: 113*0.9,width: 458*0.9,position: 'absolute',bottom:0,right:0,zIndex: 1}}
             source={require('./img/map/37.png')}
           />
          <Image
-            style={{height: 5*0.8,width: 33*0.8,position: 'absolute',top:25,left:600,zIndex: 1}}
+            style={{height: 5*0.9,width: 33*0.9,position: 'absolute',top:25,right:50,zIndex: 1}}
             source={require('./img/map/38.png')}
           />
          <Image
-            style={{height: 72*0.8,width: 10*0.8,position: 'absolute',top:25,left:880,zIndex: 1}}
+            style={{height: 72*0.9,width: 10*0.9,position: 'absolute',top:160,right:0,zIndex: 1}}
             source={require('./img/map/39.png')}
           />
          <Image
-            style={{height: 107*0.8,width: 23*0.8,position: 'absolute',top:100,left:870,zIndex: 1}}
+            style={{height: 107*0.9,width: 23*0.9,position: 'absolute',top:260,right:0,zIndex: 1}}
             source={require('./img/map/40.png')}
           />
          <Image
-            style={{height: 89*0.8,width: 34*0.8,position: 'absolute',top:230,left:860,zIndex: 1}}
+            style={{height: 89*0.9,width: 34*0.9,position: 'absolute',top:380,right:0,zIndex: 1}}
             source={require('./img/map/41.png')}
           />
          <Image
-            style={{height: 237*0.8,width: 58*0.8,position: 'absolute',top:320,left:840,zIndex: 1}}
+            style={{height: 237*0.9,width: 58*0.9,position: 'absolute',top:470,right:0,zIndex: 1}}
             source={require('./img/map/42.png')}
           />
+          {renderIf(this.state.handloopState)(
           <Animated.Image 
             style={this.getStyle()} 
             source={require('./img/hand.png')}
           />
+          )}
         </View>
         {renderIf(!this.state.modalVisible)(
           <TouchableHighlight 
@@ -864,28 +859,49 @@ const styles = StyleSheet.create({
     left: 180
   },
   hand: {
-    top:100,
+    top:150,
     left:50,
     position: 'absolute',
     zIndex: 1
   },
   chart: {
-    width: 900,
+    width: 800,
+    height: 250,
+    margin: 10,
+    zIndex: 1,
+    position: 'absolute'
+  },
+  chartColor: {
+    bottom:50,
+    left:121,
+    width: 769,
+    height: 200,
+    margin: 2,
+    backgroundColor:'#716A60',
+    zIndex: 0,
+    position: 'absolute'
+  },
+  cccc: {
+    bottom:10,
+    left:80,
+    width: 800,
+    height: 250,
+    margin: 2,
+    zIndex: 1,
+    position: 'absolute'
   },
   chartContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 250,
-    margin: 3,
-    //backgroundColor: "white",
-    flexDirection: 'row'
+    height: 350,
+    //backgroundColor: "green",
   },
   modal3TopContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 200,
+    height: 170,
     margin: 3,
-    //backgroundColor: "red",
+    backgroundColor: "red",
     flexDirection: 'row'
   },
   modal3statisticContainer: {
@@ -893,15 +909,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 100,
     margin: 3,
-    //backgroundColor: "blue",
+    backgroundColor: "blue",
     flexDirection: 'row'
   },
   modal3buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 150,
+    height: 80,
     margin: 3,
-    //backgroundColor: "green",
+    backgroundColor: "green",
     flexDirection: 'row'
   },
   modal2WorkoutContainer: {
@@ -950,7 +966,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   modal5TopicContainer:{
- justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
     height: 50,
     margin: 3,
@@ -958,7 +974,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   }, 
   modal5RankContainer:{
-   justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
     height: 500,
     margin: 3,
