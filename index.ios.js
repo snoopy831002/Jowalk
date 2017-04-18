@@ -32,6 +32,7 @@ export default class Jowalk039 extends Component {
 
    constructor(props) {
       super(props);
+      this.calculateAverageSpeed = this.calculateAverageSpeed.bind(this);
       this.clear = this.clear.bind(this);
       this.onSave = this.onSave.bind(this);
       this.onUpdate = this.onUpdate.bind(this);
@@ -74,10 +75,10 @@ export default class Jowalk039 extends Component {
     pairingVisibilityStatus: true,
     slotVisibilityStatus: false,
     confirmVisibilityStatus: false,
+    finishJourneyBtnVisibilityStatus: false,
     chartVisibilityStatus: false,
     CharacterVisibilityStatus: false,
     RankVisibilityStatus: false,
-    finishJourneyBtnVisibilityStatus: true,
     screenShotSource: placeholder,
     error: null,
     confirmPressed: false,
@@ -92,6 +93,8 @@ export default class Jowalk039 extends Component {
     previousUri: require('./img/previous.png'),
     nextUri: require('./img/next.png'),
     playAgainUri: require('./img/playAgain.png'),
+    congratulationImageShow:false,
+    goForItImageShow:true
   };
 
   snapshot = refname => () =>
@@ -135,10 +138,11 @@ export default class Jowalk039 extends Component {
   }
 
   startAndRepeat() {
-      this.triggerAnimation();  
+    this.triggerAnimation();     
   }
 
   triggerAnimation() {
+    console.log('state='+this.state.handloopState);
     if(this.state.handloopState){
       Animated.sequence([
           Animated.spring(this.state.pan, {
@@ -172,13 +176,15 @@ export default class Jowalk039 extends Component {
     this.setState({ encodedSignature: null });
   }
 
+  calculateAverageSpeed(time,distance){
+    return distance/time;
+  }
   /**
    * The Sketch component provides a 'saveImage' function (promise),
    * so that you can save the drawing in the device and get an object
    * once the promise is resolved, containing the path of the image.
    */
   onSave() {
-
     this.sketch.saveImage(this.state.encodedSignature)
       .then((data) => console.log(data))
       .catch((error) => console.log(error));
@@ -202,6 +208,7 @@ export default class Jowalk039 extends Component {
 
   finishJourney() {
     this.setState({ hide: true  });
+    this.setState({ finishJourneyBtnVisibilityStatus : false});
       takeSnapshot(this.refs['full'], this.state.value)
       .then(res => this.state.value.result !== "file" ? res : new Promise((success, failure) =>
             // just a test to ensure res can be used in Image.getSize
@@ -255,12 +262,12 @@ export default class Jowalk039 extends Component {
       distanceArr[0].push(distanceData);
       coordinates.StartXcoordinate = coordinates.EndXcoordinate ;
       coordinates.StartYcoordinate = coordinates.EndYcoordinate ;
+      if(distanceArr[0].length > 1) this.setState({finishJourneyBtnVisibilityStatus : true});
       flag = false ;
     }
   }
 
   render() {
-    console.log('in render');
     var createThumbRow = (uri, i) => <Jowalk039 key={i} source={uri} />;
     const {screenShotSource,error} = this.state;
     var modalBackgroundStyle = {
@@ -313,8 +320,6 @@ export default class Jowalk039 extends Component {
           </View>
         )
       }
-      console.log(uData);
-      
     }
     return (
       <View style={styles.container}>
@@ -347,7 +352,7 @@ export default class Jowalk039 extends Component {
                             source={screenShotSource}
                       /> }
                       <View style={[styles.slotContainer]}>   
-                        <SlotMachine text="l" padding='1' range="abcdefghijklm" />
+                        <SlotMachine text={makeid()} padding='1' range="abcdefghijklm" />
                       </View> 
                     </View> 
                     <View style={styles.modal2buttonContainer}>
@@ -373,6 +378,32 @@ export default class Jowalk039 extends Component {
               {renderIf(this.state.chartVisibilityStatus)(
                 <Animatable.View ref="modal3" animation="zoomIn" ref="" style={styles.chartDashboard}>
                   <View style={styles.modal3TopContainer}>
+                    <View style={styles.bigAverageSpeed}>
+                      <View style={styles.currentAverageSpeedText}>
+                        <Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{"本次平均速率"}</Text>
+                      </View>
+                      <View style={styles.currentAverageSpeedNum}><Text style={{color:'#FFFFFF',fontSize:80,textAlign: 'center'}}>{this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2)}</Text></View>
+
+                    </View>
+                    <View style={styles.targetSpeed}>
+                      <View style={styles.targetSpeedText}>
+                        <Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{"目標速率 6.00 km/hr"}</Text>
+                      </View>
+                      <View style={styles.congratulationImage}>
+                          {renderIf(this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2)>=6)(
+                            <Image 
+                              style={{width:271,height:60}}
+                              source={require('./img/missionAccomplished.png')}
+                            />
+                          )} 
+                          {renderIf(this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2)<6)(
+                            <Image 
+                              style={{width:271,height:60}}
+                              source={require('./img/goForIt.png')}
+                            />
+                          )} 
+                      </View>
+                    </View>
                   </View>
                   <View style={styles.chartContainer}>
                     <View style={styles.cccc}>
@@ -423,7 +454,7 @@ export default class Jowalk039 extends Component {
                             source={require('./img/speed.png')}
                           />
                       </View>
-                      <View style={{width:120,height:100,justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2)}</Text></View>
+                      <View style={{width:120,height:100,justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2)}</Text></View>
                     </View>
                     <View style={{width:220,height:100,flexDirection:'row'}}>
                       <View style={{width:60,height:100,justifyContent: 'center',alignItems: 'center'}}>
@@ -473,7 +504,7 @@ export default class Jowalk039 extends Component {
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
                                           this.setState({ currentCharacter:require('./img/characters/char1.png')});
-                                          saveCurrentUserData("0",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>  
+                                          saveCurrentUserData("0",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>  
                           <Image 
                             source={require('./img/characters/char1.png')}
                           />
@@ -482,7 +513,7 @@ export default class Jowalk039 extends Component {
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
                                           this.setState({ currentCharacter:require('./img/characters/char2.png')});
-                                          saveCurrentUserData("1",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>
+                                          saveCurrentUserData("1",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>
                           <Image 
                             source={require('./img/characters/char2.png')}
                           />
@@ -491,7 +522,7 @@ export default class Jowalk039 extends Component {
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
                                           this.setState({ currentCharacter:require('./img/characters/char3.png')});
-                                          saveCurrentUserData("2",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>  
+                                          saveCurrentUserData("2",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>  
                           <Image 
                             source={require('./img/characters/char3.png')}
                           />
@@ -500,7 +531,7 @@ export default class Jowalk039 extends Component {
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
                                           this.setState({ currentCharacter:require('./img/characters/char4.png')});
-                                          saveCurrentUserData("3",calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}> 
+                                          saveCurrentUserData("3",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}> 
                           <Image 
                             source={require('./img/characters/char4.png')}
                           />
@@ -531,12 +562,16 @@ export default class Jowalk039 extends Component {
                       onPress={()=>{this.setState({  playAgainUri:require('./img/playAgain.png')});
                       this.setState({ RankVisibilityStatus:false });
                       this.setState({ pairingVisibilityStatus:true });
-                      this.setState({ handloopState:true });
+                      this.setState({ finishJourneyBtnVisibilityStatus : false});
                       this.clear();
+                      distanceArr = [[]];
                       for(let i = 0; i < uData.length; i++){
                         uData[i].selected = 0 ;
                       };
-                      this.setState({modalVisible: false});}}>
+                      this.setState({modalVisible: false});
+                      this.setState({ handloopState: 0 });
+                      this.componentDidMount();
+                    }}>
                         <View>
                           <Image 
                             style={{width:252,height:94}}
@@ -556,8 +591,8 @@ export default class Jowalk039 extends Component {
             onResponderMove={this.handleOnMove}
             onResponderRelease={this.handlePressOut}
             fillColor="#f5f5f5"
-            strokeColor="#111111"
-            strokeThickness={2}
+            strokeColor="#EC8E44"
+            strokeThickness={17}
             onReset={this.onReset}
             onUpdate={this.onUpdate}
             ref={(sketch) => { this.sketch = sketch; }}
@@ -732,13 +767,13 @@ export default class Jowalk039 extends Component {
             source={require('./img/map/42.png')}
           />
           {renderIf(this.state.handloopState)(
-          <Animated.Image 
-            style={this.getStyle()} 
-            source={require('./img/hand.png')}
-          />
+            <Animated.Image 
+              style={this.getStyle()} 
+              source={require('./img/hand.png')}
+            />
           )}
         </View>
-        {renderIf(!this.state.modalVisible)(
+        {renderIf(this.state.finishJourneyBtnVisibilityStatus)(
           <TouchableHighlight 
             style={ styles.addButton}
             underlayColor='#ff7043' 
@@ -767,10 +802,6 @@ function calculateTotalDistance(arr){
   return (totalDistance/30)*0.05;
 }
 
-function calculateAverageSpeed(time,distance){
-  return distance/time;
-}
-
 function calculateCalories(time){
   return time*7.5;
 }
@@ -786,6 +817,13 @@ function saveCurrentUserData(char,speed){
 const placeholder = {
   uri: './img/1.png',
 };
+
+function makeid()
+{
+    var text = "";
+    var possible = "abcdefghijklm";
+    return possible.charAt(Math.floor(Math.random() * possible.length));
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -897,19 +935,59 @@ const styles = StyleSheet.create({
     //backgroundColor: "green",
   },
   modal3TopContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
     height: 170,
     margin: 3,
-    backgroundColor: "red",
+    //backgroundColor: "red",
     flexDirection: 'row'
+  },
+  bigAverageSpeed: {
+    height: 170,
+    width: 300,
+    left: 0,
+    flexDirection: 'column',
+    //backgroundColor: "pink"
+  },
+  currentAverageSpeedText:{
+    height: 50,
+    width: 300,
+    justifyContent: 'center',
+    alignItems: 'center',
+    //backgroundColor: "white"
+  },
+  currentAverageSpeedNum:{
+    height: 120,
+    width: 300,
+    justifyContent: 'center',
+    alignItems: 'center',
+    //backgroundColor: "black"
+  },
+  targetSpeed: {
+    height: 170,
+    width: 270,
+    left: 400,
+    flexDirection: 'column',
+   // backgroundColor: "green"
+  },
+  targetSpeedText:{
+    height: 50,
+    width: 270,
+    justifyContent: 'center',
+    alignItems: 'center',
+    //backgroundColor: "white"
+  },
+  congratulationImage:{
+    height: 120,
+    width: 270,
+    //backgroundColor: "black",
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   modal3statisticContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     height: 100,
     margin: 3,
-    backgroundColor: "blue",
+    //backgroundColor: "blue",
     flexDirection: 'row'
   },
   modal3buttonContainer: {
@@ -917,7 +995,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 80,
     margin: 3,
-    backgroundColor: "green",
+    //backgroundColor: "green",
     flexDirection: 'row'
   },
   modal2WorkoutContainer: {
