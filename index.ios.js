@@ -363,8 +363,15 @@ export default class Jowalk039 extends Component {
             <View style={[styles.modalContainer, modalBackgroundStyle]}>
               {renderIf(this.state.pairingVisibilityStatus)(
                 <Animatable.View animation="zoomIn" style={styles.loading} ref="modal1">
-                  <Text style={{color: 'white'}}>正在配對路徑獎勵</Text>
-                  <Image source={require('./img/loading.gif')} />
+                  <View style={styles.loadingUpper}>
+                    <Text style={{color: 'white'}}>正在配對路徑獎勵</Text>
+                  </View>
+                  <View style={styles.loadingLower}>
+                    <Image 
+                      source={require('./img/loading.gif')}
+                      style={{ width: 76,height: 20}}
+                     />
+                  </View>
                 </Animatable.View>
               )}
               {renderIf(this.state.slotVisibilityStatus)(
@@ -630,172 +637,113 @@ export default class Jowalk039 extends Component {
             style={styles.sketch}
           />
           <Image
-            style={{height: 105*0.9 ,width: 65*0.9 , position: 'absolute',top:25,left:0,zIndex: 1}}
+            style={{height: 628*0.23 ,width: 185*0.23 , position: 'absolute',top:25,left:0,zIndex: 1}}
             source={require('./img/map/1.png')}
           />
           <Image
-            style={{height:161*0.9 ,width: 37*0.9,position: 'absolute',top:135,left:0,zIndex: 1}}
+            style={{height:2006*0.23 ,width: 185*0.23,position: 'absolute',top:200,left:0,zIndex: 1}}
             source={require('./img/map/2.png')}
           />
           <Image
-            style={{height:117*0.9,width:105*0.9,position: 'absolute',top:25,left:65,zIndex: 1}}
+            style={{height:325*0.23,width:185*0.23,position: 'absolute',bottom:0,left:0,zIndex: 1}}
             source={require('./img/map/3.png')}
           />
           <Image
-            style={{height: 435,width: 132,position: 'absolute',top:150,left:0,zIndex: 1}}
+            style={{height: 628*0.23,width: 1453*0.23,position: 'absolute',top:25,left:80,zIndex: 1}}
             source={require('./img/map/4.png')}
           />
           <Image
-            style={{height: 201*0.9,width: 46*0.9,position: 'absolute',bottom:-5,left:0,zIndex: 1}}
+            style={{height: 688*0.23,width: 1453*0.23,position: 'absolute',top:200,left:80,zIndex: 1}}
             source={require('./img/map/5.png')}
           />
           <Image
-            style={{height: 18*0.9,width: 84*0.9,position: 'absolute',top:25,left:295,zIndex: 1}}
+            style={{height: 348*0.23,width: 749*0.23,position: 'absolute',top:280,left:165,zIndex: 1}}
             source={require('./img/map/6.png')}
           />
           <Image
-            style={{height: 142*0.9,width: 300*0.9,position: 'absolute',top:25,left:200,zIndex: 1}}
+            style={{height: 241*0.23,width: 1111*0.23,position: 'absolute',top:395,left:160,zIndex: 1}}
             source={require('./img/map/7.png')}
           />
           <Image
-            style={{height: 128*0.9,width: 327*0.9,position: 'absolute',top:155,left:175,zIndex: 1}}
+            style={{height: 1151*0.23,width: 1453*0.23,position: 'absolute',top:395,left:80,zIndex: 1}}
             source={require('./img/map/8.png')}
           />
           <Image
-            style={{height: 39*0.9,width: 225*0.9,position: 'absolute',top:230,left:215,zIndex: 1}}
+            style={{height: 325*0.23,width: 1453*0.23,position: 'absolute',bottom:0,left:80,zIndex: 1}}
             source={require('./img/map/9.png')}
           />
+
+
+
           <Image
-            style={{height: 46*0.9,width: 267*0.9,position: 'absolute',top:310,left:195,zIndex: 1}}
+            style={{height: 302*0.23,width: 528*0.23,position: 'absolute',top:25,left:510,zIndex: 1}}
             source={require('./img/map/10.png')}
           />
           <Image
-            style={{height: 121*0.9,width: 313*0.9,position: 'absolute',top:300,left:150,zIndex: 1}}
+            style={{height: 628*0.23,width: 778*0.23,position: 'absolute',top:25,left:450,zIndex: 1}}
             source={require('./img/map/11.png')}
           />
           <Image
-            style={{height: 137*0.9,width: 316*0.9,position: 'absolute',top:390,left:135,zIndex: 1}}
+            style={{height: 688*0.23,width: 778*0.23,position: 'absolute',top:200,left:450,zIndex: 1}}
             source={require('./img/map/12.png')}
           />
+
           <Image
-            style={{height: 142*0.9,width: 311*0.9,position: 'absolute',top:490,left:115,zIndex: 1}}
+            style={{height: 709*0.23,width: 778*0.23,position: 'absolute',top:395,left:450,zIndex: 1}}
             source={require('./img/map/13.png')}
           />
           <Image
-            style={{height: 191*0.9,width: 321*0.9,position: 'absolute',bottom:0,left:85,zIndex: 1}}
+            style={{height: 359*0.23,width: 778*0.23,position: 'absolute',top:578,left:450,zIndex: 1}}
             source={require('./img/map/14.png')}
           />
           <Image
-            style={{height: 59*0.9,width: 180*0.9,position: 'absolute',bottom:0,left:210,zIndex: 1}}
+            style={{height: 325*0.23,width: 778*0.23,position: 'absolute',bottom:0,left:450,zIndex: 1}}
             source={require('./img/map/15.png')}
           />
-          <Image
-            style={{height: 20*0.9,width: 33*0.9,position: 'absolute',top:25,left:500,zIndex: 1}}
+
+<Image
+            style={{height: 302*0.23,width: 647*0.23,position: 'absolute',top:25,left:650,zIndex: 1}}
             source={require('./img/map/16.png')}
           />
           <Image
-            style={{height: 18*0.9,width: 50*0.9,position: 'absolute',top:25,left:560,zIndex: 1}}
+            style={{height: 156*0.23,width: 439*0.23,position: 'absolute',top:25,left:810,zIndex: 1}}
             source={require('./img/map/17.png')}
           />
           <Image
-            style={{height: 17*0.9,width: 50*0.9,position: 'absolute',top:25,left:620,zIndex: 1}}
+            style={{height: 389*0.23,width: 1182*0.23,position: 'absolute',top:80,left:650,zIndex: 1}}
             source={require('./img/map/18.png')}
           />
-         <Image
-            style={{height: 15*0.9,width: 17*0.9,position: 'absolute',top:25,left:670,zIndex: 1}}
+          <Image
+            style={{height: 688*0.23,width: 743*0.23,position: 'absolute',top:200,left:650,zIndex: 1}}
             source={require('./img/map/19.png')}
           />
           <Image
-            style={{height: 15*0.9,width: 44*0.9,position: 'absolute',top:25,left:690,zIndex: 1}}
+            style={{height: 2006*0.23,width: 1182*0.23,position: 'absolute',top:200,left:650,zIndex: 1}}
             source={require('./img/map/20.png')}
           />
           <Image
-            style={{height: 59*0.9,width: 134*0.9,position: 'absolute',top:50,left:550,zIndex: 1}}
+            style={{height: 325*0.23,width: 1182*0.23,position: 'absolute',bottom:0,left:650,zIndex: 1}}
             source={require('./img/map/21.png')}
           />
           <Image
-            style={{height: 143*0.9,width: 237*0.9,position: 'absolute',top:50,left:510,zIndex: 1}}
+            style={{height: 625*0.23,width: 273*0.23,position: 'absolute',top:25,right:0,zIndex: 1}}
             source={require('./img/map/22.png')}
           />
           <Image
-            style={{height: 134*0.9,width: 214*0.9,position: 'absolute',top:180,left:500,zIndex: 1}}
+            style={{height: 645*0.23,width: 273*0.23,position: 'absolute',top:200,right:0,zIndex: 1}}
             source={require('./img/map/23.png')}
           />
           <Image
-            style={{height: 123*0.9,width: 202*0.9,position: 'absolute',top:290,left:470,zIndex: 1}}
+            style={{height: 243*0.23,width: 273*0.23,position: 'absolute',top:370,right:0,zIndex: 1}}
             source={require('./img/map/24.png')}
           />
           <Image
-            style={{height: 126*0.9,width: 213*0.9,position: 'absolute',top:390,left:450,zIndex: 1}}
+            style={{height: 922*0.23,width: 273*0.23,position: 'absolute',top:445,right:0,zIndex: 1}}
             source={require('./img/map/25.png')}
           />
           <Image
-            style={{height: 127*0.9,width: 213*0.9,position: 'absolute',top:500,left:430,zIndex: 1}}
+            style={{height: 325*0.23,width: 273*0.23,position: 'absolute',bottom:0,right:0,zIndex: 1}}
             source={require('./img/map/26.png')}
-          />
-          <Image
-            style={{height: 121*0.9,width: 212*0.9,position: 'absolute',top:620,left:410,zIndex: 1}}
-            source={require('./img/map/27.png')}
-          />
-         <Image
-            style={{height: 34*0.9,width: 199*0.9,position: 'absolute',bottom:0,left:400,zIndex: 1}}
-            source={require('./img/map/28.png')}
-          />
-         <Image
-            style={{height: 40*0.9,width: 149*0.9,position: 'absolute',top:25,right:140,zIndex: 1}}
-            source={require('./img/map/29.png')}
-          />
-         <Image
-            style={{height: 48*0.9,width: 53*0.9,position: 'absolute',top:25,right:90,zIndex: 1}}
-            source={require('./img/map/30.png')}
-          />
-         <Image
-            style={{height: 60*0.9,width: 79*0.9,position: 'absolute',top:25,right:10,zIndex: 1}}
-            source={require('./img/map/31.png')}
-          />
-         <Image
-            style={{height: 85*0.9,width: 184*0.9,position: 'absolute',top:80,right:120,zIndex: 1}}
-            source={require('./img/map/32.png')}
-          />
-         <Image
-            style={{height: 59*0.9,width: 113*0.9,position: 'absolute',top:110,right:10,zIndex: 1}}
-            source={require('./img/map/33.png')}
-          />
-         <Image
-            style={{height: 119*0.9,width: 309*0.9,position: 'absolute',top:150,right:25,zIndex: 1}}
-            source={require('./img/map/34.png')}
-          />
-         <Image
-            style={{height: 139*0.9,width: 242*0.9,position: 'absolute',top:240,right:120,zIndex: 1}}
-            source={require('./img/map/35.png')}
-          />
-         <Image
-            style={{height: 465*0.9,width: 400*0.9,position: 'absolute',top:270,right:40,zIndex: 1}}
-            source={require('./img/map/36.png')}
-          />
-         <Image
-            style={{height: 113*0.9,width: 458*0.9,position: 'absolute',bottom:0,right:0,zIndex: 1}}
-            source={require('./img/map/37.png')}
-          />
-         <Image
-            style={{height: 5*0.9,width: 33*0.9,position: 'absolute',top:25,right:50,zIndex: 1}}
-            source={require('./img/map/38.png')}
-          />
-         <Image
-            style={{height: 72*0.9,width: 10*0.9,position: 'absolute',top:160,right:0,zIndex: 1}}
-            source={require('./img/map/39.png')}
-          />
-         <Image
-            style={{height: 107*0.9,width: 23*0.9,position: 'absolute',top:260,right:0,zIndex: 1}}
-            source={require('./img/map/40.png')}
-          />
-         <Image
-            style={{height: 89*0.9,width: 34*0.9,position: 'absolute',top:380,right:0,zIndex: 1}}
-            source={require('./img/map/41.png')}
-          />
-         <Image
-            style={{height: 237*0.9,width: 58*0.9,position: 'absolute',top:470,right:0,zIndex: 1}}
-            source={require('./img/map/42.png')}
           />
           {renderIf(this.state.handloopState)(
             <View style={styles.handGifContainer}>
@@ -899,6 +847,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
   },
   sketch: {
@@ -907,8 +856,22 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   loading: {
-    alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0)',
+    flexDirection: 'column',
+    width: 200,
+    height: 100,
+  },
+  loadingUpper: {
+    width: 150,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+   loadingLower: {
+    width: 150,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   chartDashboard: {
     margin: 3,
