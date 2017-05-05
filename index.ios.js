@@ -51,6 +51,7 @@ export default class Jowalk039 extends Component {
       global.distanceArr = [[]];
       global.uData=new Array();
       global.charIcons=new Array();
+      global.fadeAnim=new Animated.Value(1);
       charIcons = [  
       {image: require('./img/characters/char1.png')},
       {image: require('./img/characters/char2.png')},
@@ -67,6 +68,7 @@ export default class Jowalk039 extends Component {
     currentCharacter: require('./img/characters/char1.png'),
     currentAverageSpeed: 0,
     handloopState : 1,
+    handloopStateRepeat : 1,
     encodedSignature: null,
     animationType: 'fade',
     modalVisible: false,
@@ -135,16 +137,21 @@ export default class Jowalk039 extends Component {
   }
 
   componentDidMount() {
-    this.startAndRepeat();
+    //this.startAndRepeat();
+
   }
 
   startAndRepeat() {
-    this.triggerAnimation();     
+    //console.log('==start and repeat==');
+    //this.triggerAnimation();     
   }
 
   triggerAnimation() {
-    console.log('state='+this.state.handloopState);
+    /*
     if(this.state.handloopState){
+      
+      //console.log('in hand loop state');
+      
       Animated.sequence([
           Animated.spring(this.state.pan, {
             toValue: {x: 300, y: 80},
@@ -156,9 +163,28 @@ export default class Jowalk039 extends Component {
           })
       ]).start(event => {
       if (event.finished) {
-        this.triggerAnimation();
+        if (this.state.handloopStateRepeat) {
+          this.triggerAnimation();       
+        };
       }});
     }
+    */
+    /*
+    Animated.timing(       // Uses easing functions
+            this.state.fadeAnim, // The value to drive
+            {
+              toValue: 0,        // Target
+              duration: 2000,    // Configuration
+            },
+          ).start();
+    */
+     Animated.sequence([
+          Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 2000,    
+          })
+      ]).start();
+    //console.log("TA"); 
   }
 
   getStyle() {
@@ -244,7 +270,9 @@ export default class Jowalk039 extends Component {
   }
 
   handlePressIn(e){
-    this.setState({ handloopState: 0  });
+    //this.setState({ handloopState: 0  });
+    //this.setState({ handloopStateRepeat: 0  });
+    this.triggerAnimation();
     coordinates.StartXcoordinate = e.nativeEvent.locationX ;
     coordinates.StartYcoordinate = e.nativeEvent.locationY ;
     Interval = setInterval(() => { flag = true; }, 1000);
@@ -570,8 +598,10 @@ export default class Jowalk039 extends Component {
                         uData[i].selected = 0 ;
                       };
                       this.setState({modalVisible: false});
-                      this.setState({ handloopState: 0 });
-                      this.componentDidMount();
+                      this.setState({ handloopState: 1 });
+                      fadeAnim=new Animated.Value(1);
+                      //this.setState({ handloopStateRepeat: 1 });
+                      //this.startAndRepeat();
                     }}>
                         <View>
                           <Image 
@@ -768,31 +798,30 @@ export default class Jowalk039 extends Component {
             source={require('./img/map/42.png')}
           />
           {renderIf(this.state.handloopState)(
-            <Animated.Image 
-              style={this.getStyle()} 
-              source={require('./img/hand.png')}
-            />
+            <View style={styles.handGifContainer}>
+              <Animated.Image 
+                style={{width:270,
+                        height:150,
+                        opacity: fadeAnim
+                      }}
+                source={require('./img/hand.gif')}
+              />
+            </View> 
           )}
         </View>
         {renderIf(this.state.finishJourneyBtnVisibilityStatus)(
-
-
-
- <View style={styles.addButton}>
-                    <TouchableWithoutFeedback 
-                      onPressIn={this.finishJourney}
-                      onPress={()=>{this.setState({  finishJourneyUri:require('./img/finishJourney.png')});
-                    }}>
-                        <View>
-                          <Image 
-                            style={{width:252,height:94}}
-                            source={this.state.finishJourneyUri}
-                          />
-                        </View>        
-                    </TouchableWithoutFeedback>
-                  </View>
-
-
+          <View style={styles.addButton}>
+            <TouchableWithoutFeedback 
+              onPressIn={this.finishJourney}
+              onPress={()=>{this.setState({  finishJourneyUri:require('./img/finishJourney.png')});}}>
+                <View>
+                  <Image 
+                    style={{width:252,height:94}}
+                    source={this.state.finishJourneyUri}
+                  />
+                </View>        
+            </TouchableWithoutFeedback>
+          </View>
         )}
       </View>
     );
@@ -841,6 +870,16 @@ function makeid()
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  handGifContainer: {
+    position: 'absolute',
+    width: 270,
+    top:200,
+    left:100,
+    height: 150,
+    zIndex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   addButton: {
         justifyContent: 'center',
@@ -905,8 +944,10 @@ const styles = StyleSheet.create({
     left: 180
   },
   hand: {
-    top:150,
-    left:50,
+    //top:150,
+    //left:50,
+    top:200,
+    left:100,
     position: 'absolute',
     zIndex: 1
   },
