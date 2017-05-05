@@ -93,6 +93,7 @@ export default class Jowalk039 extends Component {
     previousUri: require('./img/previous.png'),
     nextUri: require('./img/next.png'),
     playAgainUri: require('./img/playAgain.png'),
+    finishJourneyUri: require('./img/finishJourney.png'),
     congratulationImageShow:false,
     goForItImageShow:true
   };
@@ -774,12 +775,24 @@ export default class Jowalk039 extends Component {
           )}
         </View>
         {renderIf(this.state.finishJourneyBtnVisibilityStatus)(
-          <TouchableHighlight 
-            style={ styles.addButton}
-            underlayColor='#ff7043' 
-            onPress={this.finishJourney}>
-            <Text style={{color: 'white'}}>結束旅程</Text>
-          </TouchableHighlight>
+
+
+
+ <View style={styles.addButton}>
+                    <TouchableWithoutFeedback 
+                      onPressIn={this.finishJourney}
+                      onPress={()=>{this.setState({  finishJourneyUri:require('./img/finishJourney.png')});
+                    }}>
+                        <View>
+                          <Image 
+                            style={{width:252,height:94}}
+                            source={this.state.finishJourneyUri}
+                          />
+                        </View>        
+                    </TouchableWithoutFeedback>
+                  </View>
+
+
         )}
       </View>
     );
@@ -830,24 +843,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   addButton: {
-    backgroundColor: '#ff5722',
-    borderColor: '#ff5722',
-    borderWidth: 1,
-    height: 50,
-    width: 150,
-    borderRadius: 5,
+        justifyContent: 'center',
+    alignItems: 'center',
+    //backgroundColor: '#ff5722',
+    //borderColor: '#ff5722',
+    //borderWidth: 1,
+    height: 94,
+    width: 252,
+    //borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
     bottom: 20,
-    right: (Dimensions.get("window").height)*0.5+50,
-    shadowColor: "#000000",
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 1,
-      width: 0
-    }
+    left: 390,
   },
   modalContainer: {
     flex: 1,
