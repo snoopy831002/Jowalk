@@ -382,13 +382,19 @@ export default class Jowalk039 extends Component {
                         ? <Text style={styles.previewError}>
                               {"有錯誤"+(error.message || error)}
                           </Text>
-                        : <Image
-                            resizeMode="contain"
-                            style={styles.previewImage}
-                            source={screenShotSource}
-                      /> }
+                        : 
+                        <View style={[styles.previewImageContainer]}> 
+                          <Image
+                              resizeMode="contain"
+                              style={styles.previewImage}
+                              source={screenShotSource}/>
+                        </View>
+                       }
+                      <View style={[styles.modal2placeholder]}>   
+                      </View> 
                       <View style={[styles.slotContainer]}>   
-                        <SlotMachine text={makeid()} padding='1' range="abcdefghijklm" />
+                        <SlotMachine text={makeid()} padding='1' range="abcdefghijklm"
+                         />
                       </View> 
                     </View> 
                     <View style={styles.modal2buttonContainer}>
@@ -896,15 +902,30 @@ const styles = StyleSheet.create({
     color: "#fff",
     backgroundColor: "#c00",
   },
+  previewImageContainer: {
+    width: 450,
+    height: 350,
+    left: 0,
+    //backgroundColor: "red",
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   previewImage: {
-    width: 375,
-    height: 300,
-    left: 0
+    width: 400,
+    height: 310,
+  },
+  modal2placeholder: {
+    width: 5,
+    height: 350,
+   // backgroundColor: "green"
   },
   slotContainer: {
-    width: 300,
-    height: 300,
-    left: 180
+    width: 340,
+    height: 350,
+    justifyContent: 'center',
+    alignItems: 'center',
+    right: 0,
+    //backgroundColor: "blue",
   },
   hand: {
     //top:150,
