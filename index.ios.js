@@ -339,7 +339,7 @@ export default class Jowalk039 extends Component {
             <View style={styles.rankCharacter}>
               <Image 
                 source={charIcons[uData[i].char].image}
-                style={{width:70,height:70}}
+                style={{width:67,height:67}}
               />
             </View>
             <View style={styles.rankPlaceholder}></View>
@@ -369,7 +369,7 @@ export default class Jowalk039 extends Component {
                   <View style={styles.loadingLower}>
                     <Image 
                       source={require('./img/loading.gif')}
-                      style={{ width: 76,height: 20}}
+                      style={{ width: 86.2,height: 23}}
                      />
                   </View>
                 </Animatable.View>
@@ -422,10 +422,20 @@ export default class Jowalk039 extends Component {
                   <View style={styles.modal3TopContainer}>
                     <View style={styles.bigAverageSpeed}>
                       <View style={styles.currentAverageSpeedText}>
-                        <Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{"本次平均速率"}</Text>
+                        <Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'left'}}>{"本次平均速率"}</Text>
                       </View>
-                      <View style={styles.currentAverageSpeedNum}><Text style={{color:'#FFFFFF',fontSize:80,textAlign: 'center'}}>{this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2)}</Text></View>
-
+                      <View style={styles.currentAverageSpeedNum}>
+                        <View style={styles.currentAverageSpeedNumValue}>
+                          <View style={styles.currentAverageSpeedNumValueCenter}>
+                            <Text style={{color:'#FFFFFF',fontSize:80,textAlign: 'left'}}>{this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2)}</Text>
+                          </View> 
+                        </View>  
+                        <View style={styles.currentAverageSpeedNumUnit}>
+                          <View style={styles.currentAverageSpeedNumUnitCenter}>
+                            <Text style={{color:'#FFFFFF',fontSize:15,paddingTop:39}}>{"km/hr"}</Text>                     
+                          </View> 
+                        </View>
+                      </View>
                     </View>
                     <View style={styles.targetSpeed}>
                       <View style={styles.targetSpeedText}>
@@ -471,41 +481,64 @@ export default class Jowalk039 extends Component {
                     <View style={styles.chartColor}></View>
                   </View>
                   <View style={styles.modal3statisticContainer}>
-                    <View style={{width:220,height:100,flexDirection:'row'}}>
+                    <View style={{width:220,height:100,flexDirection:'row',justifyContent: 'center'}}>
                       <View style={{width:60,height:100,justifyContent: 'center',alignItems: 'center'}}>
                           <Image 
                             style={{width:60,height:60}}
                             source={require('./img/time.png')}
                           />
                       </View>
-                      <View style={{width:120,height:100,justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{(this.state.totalTime)*60}</Text></View>
+                      <View style={{width:120,height:100,justifyContent:'center',alignItems:'center'}}>
+                        <Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{(this.state.totalTime)*60}</Text>
+                      </View>
                     </View>
-                    <View style={{width:220,height:100,flexDirection:'row'}}>
+                    <View style={{width:220,height:100,flexDirection:'row',justifyContent: 'center'}}>
                       <View style={{width:60,height:100,justifyContent: 'center',alignItems: 'center'}}>
                           <Image 
                             style={{width:60,height:60}}
                             source={require('./img/calories.png')}
                           />
                       </View>
-                      <View style={{width:120,height:100,justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{calculateCalories(this.state.totalTime)*60}</Text></View>
+                      <View style={{width:120,height:100,flexDirection:'row',justifyContent: 'center',alignItems: 'center'}}>
+                        <View style={{width:70,height:100,justifyContent: 'center',alignItems: 'center'}}>
+                          <Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{calculateCalories(this.state.totalTime)*60}</Text>
+                        </View>
+                        <View style={{width:30,height:100,justifyContent: 'center',paddingTop: 6}}>
+                          <Text style={{color:'#FFFFFF',fontSize:10,textAlign: 'left'}}>{'cal'}</Text>
+                        </View>
+                      </View>
                     </View>
-                    <View style={{width:220,height:100,flexDirection:'row'}}>
+                    <View style={{width:220,height:100,flexDirection:'row',justifyContent: 'center'}}>
                       <View style={{width:60,height:100,justifyContent: 'center',alignItems: 'center'}}>
                           <Image 
                             style={{width:60,height:60}}
                             source={require('./img/speed.png')}
                           />
                       </View>
-                      <View style={{width:120,height:100,justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2)}</Text></View>
+                      <View style={{width:120,height:100,flexDirection:'row',justifyContent: 'center',alignItems: 'center'}}>
+                        <View style={{width:70,height:100,justifyContent: 'center',alignItems: 'center'}}>
+                          <Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2)}</Text>
+                        </View>
+                        <View style={{width:30,height:100,justifyContent: 'center',paddingTop: 6}}>
+                          <Text style={{color:'#FFFFFF',fontSize:10,textAlign: 'left'}}>{'km/hr'}</Text>
+                        </View>
+                      </View>
                     </View>
-                    <View style={{width:220,height:100,flexDirection:'row'}}>
+                    <View style={{width:220,height:100,flexDirection:'row',justifyContent: 'center'}}>
                       <View style={{width:60,height:100,justifyContent: 'center',alignItems: 'center'}}>
                           <Image 
                             style={{width:60,height:60}}
                             source={require('./img/step.png')}
                           />
                       </View>
-                      <View style={{width:120,height:100,justifyContent: 'center',alignItems: 'center'}}><Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{parseInt(this.state.totalDistance*20*75)}</Text></View>
+                      <View style={{width:120,height:100,flexDirection:'row',justifyContent: 'center',alignItems: 'center'}}>
+                        <View style={{width:70,height:100,justifyContent: 'center',alignItems: 'center'}}>
+                          <Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{parseInt(this.state.totalDistance*20*75)}</Text>
+                        </View>
+                        <View style={{width:30,height:100,justifyContent: 'center',paddingTop: 6}}>
+                          <Text style={{color:'#FFFFFF',fontSize:10,textAlign: 'left'}}>{'步'}</Text>
+                        </View>
+                      </View>
                     </View>
                   </View>
                   <View style={styles.modal3buttonContainer}>
@@ -539,10 +572,11 @@ export default class Jowalk039 extends Component {
               {renderIf(this.state.CharacterVisibilityStatus)(
                 <Animatable.View ref="modal4" animation="zoomIn" ref="" style={styles.modal4}>
                   <View style={styles.modal4TopicContainer}>
-                  <Text style={{color:'#FFFFFF',fontSize:50}}>請選一個角色</Text>
+                    <Text style={{color:'#FFFFFF',fontSize:50}}>請選一個角色</Text>
                   </View>
                   <View style={styles.modal4CharacterContainer}>
-                      <TouchableWithoutFeedback 
+                     <View style={{paddingHorizontal: 45}}>
+                      <TouchableWithoutFeedback     
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
                                           this.setState({ currentCharacter:require('./img/characters/char1.png')});
@@ -550,8 +584,10 @@ export default class Jowalk039 extends Component {
                           <Image 
                             source={require('./img/characters/char1.png')}
                           />
-                      </TouchableWithoutFeedback> 
-                      <TouchableWithoutFeedback  
+                      </TouchableWithoutFeedback>
+                    </View>
+                    <View style={{paddingHorizontal: 45}}>  
+                      <TouchableWithoutFeedback     
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
                                           this.setState({ currentCharacter:require('./img/characters/char2.png')});
@@ -559,7 +595,9 @@ export default class Jowalk039 extends Component {
                           <Image 
                             source={require('./img/characters/char2.png')}
                           />
-                      </TouchableWithoutFeedback> 
+                      </TouchableWithoutFeedback>
+                    </View>
+                    <View style={{paddingHorizontal: 45}}> 
                       <TouchableWithoutFeedback   
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
@@ -568,7 +606,9 @@ export default class Jowalk039 extends Component {
                           <Image 
                             source={require('./img/characters/char3.png')}
                           />
-                      </TouchableWithoutFeedback> 
+                      </TouchableWithoutFeedback>
+                    </View>
+                    <View style={{paddingHorizontal: 45}}> 
                       <TouchableWithoutFeedback  
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
@@ -577,7 +617,8 @@ export default class Jowalk039 extends Component {
                           <Image 
                             source={require('./img/characters/char4.png')}
                           />
-                      </TouchableWithoutFeedback>  
+                      </TouchableWithoutFeedback> 
+                    </View> 
                   </View>
                   <View style={styles.modal4buttonContainer}>
                   </View>
@@ -626,7 +667,7 @@ export default class Jowalk039 extends Component {
                   </View>
                 </Animatable.View>
               )}  
-                </View>
+            </View>
           </Modal>
           <Sketch
             onStartShouldSetResponder={this._onStartShouldSetResponder}
@@ -678,9 +719,6 @@ export default class Jowalk039 extends Component {
             style={{height: 325*0.23,width: 1453*0.23,position: 'absolute',bottom:0,left:80,zIndex: 1}}
             source={require('./img/map/9.png')}
           />
-
-
-
           <Image
             style={{height: 302*0.23,width: 528*0.23,position: 'absolute',top:25,left:510,zIndex: 1}}
             source={require('./img/map/10.png')}
@@ -693,7 +731,6 @@ export default class Jowalk039 extends Component {
             style={{height: 688*0.23,width: 778*0.23,position: 'absolute',top:200,left:450,zIndex: 1}}
             source={require('./img/map/12.png')}
           />
-
           <Image
             style={{height: 709*0.23,width: 778*0.23,position: 'absolute',top:395,left:450,zIndex: 1}}
             source={require('./img/map/13.png')}
@@ -706,8 +743,7 @@ export default class Jowalk039 extends Component {
             style={{height: 325*0.23,width: 778*0.23,position: 'absolute',bottom:0,left:450,zIndex: 1}}
             source={require('./img/map/15.png')}
           />
-
-<Image
+          <Image
             style={{height: 302*0.23,width: 647*0.23,position: 'absolute',top:25,left:650,zIndex: 1}}
             source={require('./img/map/16.png')}
           />
@@ -880,8 +916,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   chartDashboard: {
-    margin: 3,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    //backgroundColor: "purple",
   },
   innerContainer: {
     borderRadius: 10,
@@ -940,21 +978,22 @@ const styles = StyleSheet.create({
     height: 250,
     margin: 10,
     zIndex: 1,
+    left:20,
     position: 'absolute'
   },
   chartColor: {
     bottom:50,
-    left:121,
     width: 769,
     height: 200,
     margin: 2,
+    left:60,
     backgroundColor:'#716A60',
     zIndex: 0,
     position: 'absolute'
   },
   cccc: {
     bottom:10,
-    left:80,
+    left:0,
     width: 800,
     height: 250,
     margin: 2,
@@ -964,12 +1003,17 @@ const styles = StyleSheet.create({
   chartContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 350,
+    height: 250,
+    width: 900,
     //backgroundColor: "green",
+    margin: 3,
+    flexDirection: 'row'
   },
   modal3TopContainer: {
     height: 170,
     margin: 3,
+    width: 900,
+    height:200,
     //backgroundColor: "red",
     flexDirection: 'row'
   },
@@ -984,22 +1028,48 @@ const styles = StyleSheet.create({
     height: 50,
     width: 300,
     justifyContent: 'center',
-    alignItems: 'center',
-    //backgroundColor: "white"
+    //ackgroundColor: "green"
   },
   currentAverageSpeedNum:{
     height: 120,
     width: 300,
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'row',
     //backgroundColor: "black"
+  },
+  currentAverageSpeedNumValue:{
+    height: 120,
+    width: 230,
+    justifyContent: 'center',
+    alignItems: 'center',
+    //backgroundColor: "orange"
+  },
+  currentAverageSpeedNumValueCenter:{
+    height: 60,
+    width: 230,
+    justifyContent: 'center',
+    //backgroundColor: "pink"
+  },
+  currentAverageSpeedNumUnit:{
+    height: 120,
+    width: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+    //backgroundColor: "blue"
+  },
+  currentAverageSpeedNumUnitCenter:{
+    height: 60,
+    width: 70,
+    justifyContent: 'center',
+    //backgroundColor: "red"
   },
   targetSpeed: {
     height: 170,
     width: 270,
-    left: 400,
+    left: 350,
     flexDirection: 'column',
-   // backgroundColor: "green"
+    //backgroundColor: "black"
   },
   targetSpeedText:{
     height: 50,
@@ -1055,7 +1125,8 @@ const styles = StyleSheet.create({
   modal4CharacterContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 300,
+    height: 150,
+    width: 800,
     margin: 3,
     //backgroundColor: "green",
     flexDirection: 'row'
