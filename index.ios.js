@@ -328,7 +328,16 @@ export default class Jowalk039 extends Component {
                 style={{width:40,height:40}}
               />
             </View>
-            <View style={styles.rankMinute}><Text style={{color:'#FFFFFF',fontSize:30,textAlign: 'center'}}>{uData[i].speed}</Text></View>
+            <View style={styles.rankMinute}>
+              <View style={{height:70,width:110,alignItems:'center',justifyContent:'center',backgroundColor:'red'}}>
+                <Text style={{color:'#FFFFFF',fontSize:30,textAlign: 'center'}}>{uData[i].speed}</Text>
+              </View>
+              <View style={{height:70,width:80,backgroundColor:'orange'}}>
+                <View style={{height:15,width:40,left:0,top:35}}>
+                  <Text style={{color:'#FFFFFF',fontSize:12,textAlign: 'left',backgroundColor:'blue'}}>{'km/hr'}</Text>
+                </View>
+              </View>
+            </View>
           </View>
         )
       }
@@ -345,7 +354,16 @@ export default class Jowalk039 extends Component {
             <View style={styles.rankPlaceholder}></View>
             <View style={styles.rankSprint}>
             </View>
-            <View style={styles.rankMinute}><Text style={{color:'#FFFFFF',fontSize:30,textAlign: 'center'}}>{uData[i].speed}</Text></View>
+            <View style={styles.rankMinute}>
+              <View style={{height:70,width:110,alignItems:'center',justifyContent:'center',backgroundColor:'red'}}>
+                <Text style={{color:'#FFFFFF',fontSize:30,textAlign: 'center'}}>{uData[i].speed}</Text>
+              </View>
+              <View style={{height:70,width:80,backgroundColor:'orange'}}>
+                <View style={{height:15,width:40,left:0,top:35}}>
+                  <Text style={{color:'#FFFFFF',fontSize:12,textAlign: 'left',backgroundColor:'blue'}}>{'km/hr'}</Text>
+                </View>
+              </View>
+            </View>
           </View>
         )
       }
@@ -364,7 +382,7 @@ export default class Jowalk039 extends Component {
               {renderIf(this.state.pairingVisibilityStatus)(
                 <Animatable.View animation="zoomIn" style={styles.loading} ref="modal1">
                   <View style={styles.loadingUpper}>
-                    <Text style={{color: 'white'}}>正在配對路徑獎勵</Text>
+                    <Text style={{color: 'white',fontSize:15}}>正在配對路徑獎勵</Text>
                   </View>
                   <View style={styles.loadingLower}>
                     <Image 
@@ -627,7 +645,7 @@ export default class Jowalk039 extends Component {
               {renderIf(this.state.RankVisibilityStatus)(
                 <Animatable.View ref="modal5" animation="zoomIn" ref="" style={styles.modal5}>
                   <View style={styles.modal5TopicContainer}>
-                    <Text style={{color:'#FFFFFF',fontSize:50}}>您的名次</Text>
+                    <Text style={{color:'#FFFFFF',fontSize:60,textAlign:'left'}}>您的名次</Text>
                   </View>
                   <View style={styles.modal5RankContainer}>
                       <ScrollView
@@ -657,12 +675,12 @@ export default class Jowalk039 extends Component {
                       //this.setState({ handloopStateRepeat: 1 });
                       //this.startAndRepeat();
                     }}>
-                        <View>
-                          <Image 
-                            style={{width:252,height:94}}
-                            source={this.state.playAgainUri}
-                          />
-                        </View>        
+                      <View>
+                        <Image 
+                          style={{width:252,height:94}}
+                          source={this.state.playAgainUri}
+                        />
+                      </View>        
                     </TouchableWithoutFeedback>
                   </View>
                 </Animatable.View>
@@ -1145,14 +1163,15 @@ const styles = StyleSheet.create({
   },
   modal5: {
     margin: 3,
-    flexDirection: 'column'
-  },
-  modal5TopicContainer:{
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 50,
-    margin: 3,
-    //backgroundColor: "red",
+  },
+  modal5TopicContainer:{
+    height: 70,
+    width:960,
+    margin: 15,
+    backgroundColor: "red",
     flexDirection: 'row'
   }, 
   modal5RankContainer:{
@@ -1160,71 +1179,77 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 500,
     margin: 3,
-    //backgroundColor: "green",
-    flexGrow:1
+    backgroundColor: "green",
   },
   modal5buttonContainer:{
     justifyContent: 'center',
     alignItems: 'center',
     height: 50,
     margin: 3,
-    //backgroundColor: "blue",
+    backgroundColor: "blue",
     flexDirection: 'row'
   },
   scrollView:{
     height:500,
-    flex:1
-    //backgroundColor: "red",
+    flex:1,
+    backgroundColor: "red",
   },
   rankPlacesContainerSelected:{
     height: 90,
     width:960,
-    //backgroundColor: "blue",
+    backgroundColor: "blue",
     margin: 3,
     padding: 2,
     borderRadius:10,
     borderWidth: 5,
     borderColor: '#E8843C',
+    justifyContent: 'center',
+    alignItems: 'center',
     flexDirection: 'row'
   },
   rankPlacesContainer:{
     height: 90,
     width:960,
-    //backgroundColor: "blue",
+    backgroundColor: "blue",
     margin: 3,
     padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
     flexDirection: 'row'
   },
   rankPlace:{
     height: 70,
     width:60,
-    //backgroundColor: "red",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "red",
   },
   rankCharacter:{
     height: 70,
     width:85,
-    //backgroundColor: "orange",
+    backgroundColor: "orange",
     justifyContent: 'center',
     alignItems: 'center'
   },
   rankPlaceholder:{
     height: 70,
     width:520,
-    //backgroundColor: "yellow",
+    backgroundColor: "yellow",
   },
   rankSprint:{
     height: 70,
     width:85,
-    //backgroundColor: "green",
+    backgroundColor: "green",
     justifyContent: 'center',
     alignItems: 'center'
   },
   rankMinute:{
     height: 70,
     width:190,
-    //backgroundColor: "blue",
+    backgroundColor: "pink",
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    flexDirection: 'row'
   },
 });
 
