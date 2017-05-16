@@ -52,6 +52,7 @@ export default class Jowalk039 extends Component {
       global.uData=new Array();
       global.charIcons=new Array();
       global.fadeAnim=new Animated.Value(1);
+      //global.selectedContainer = 0;
       charIcons = [  
       {image: require('./img/characters/char1.png')},
       {image: require('./img/characters/char2.png')},
@@ -62,6 +63,7 @@ export default class Jowalk039 extends Component {
 
   state = {
     totalDistance : '',
+    selectedContainer :0,
     totalTime : 0,
     totalSteps:0,
     totalCalories:0,
@@ -329,12 +331,12 @@ export default class Jowalk039 extends Component {
               />
             </View>
             <View style={styles.rankMinute}>
-              <View style={{height:70,width:110,alignItems:'center',justifyContent:'center',backgroundColor:'red'}}>
+              <View style={{height:70,width:110,alignItems:'center',justifyContent:'center'}}>
                 <Text style={{color:'#FFFFFF',fontSize:30,textAlign: 'center'}}>{uData[i].speed}</Text>
               </View>
-              <View style={{height:70,width:80,backgroundColor:'orange'}}>
+              <View style={{height:70,width:80,}}>
                 <View style={{height:15,width:40,left:0,top:35}}>
-                  <Text style={{color:'#FFFFFF',fontSize:12,textAlign: 'left',backgroundColor:'blue'}}>{'km/hr'}</Text>
+                  <Text style={{color:'#FFFFFF',fontSize:12,textAlign: 'left'}}>{'km/hr'}</Text>
                 </View>
               </View>
             </View>
@@ -355,12 +357,12 @@ export default class Jowalk039 extends Component {
             <View style={styles.rankSprint}>
             </View>
             <View style={styles.rankMinute}>
-              <View style={{height:70,width:110,alignItems:'center',justifyContent:'center',backgroundColor:'red'}}>
+              <View style={{height:70,width:110,alignItems:'center',justifyContent:'center'}}>
                 <Text style={{color:'#FFFFFF',fontSize:30,textAlign: 'center'}}>{uData[i].speed}</Text>
               </View>
-              <View style={{height:70,width:80,backgroundColor:'orange'}}>
+              <View style={{height:70,width:80}}>
                 <View style={{height:15,width:40,left:0,top:35}}>
-                  <Text style={{color:'#FFFFFF',fontSize:12,textAlign: 'left',backgroundColor:'blue'}}>{'km/hr'}</Text>
+                  <Text style={{color:'#FFFFFF',fontSize:12,textAlign: 'left'}}>{'km/hr'}</Text>
                 </View>
               </View>
             </View>
@@ -649,11 +651,29 @@ export default class Jowalk039 extends Component {
                   </View>
                   <View style={styles.modal5RankContainer}>
                       <ScrollView
-                        ref={(scrollView) => { _scrollView = scrollView; }}
+                        ref="scrollView"
                         automaticallyAdjustContentInsets={false}
                         bounces={true}
                         style={styles.scrollView}
-                        scrollEventThrottle={200}>
+                        scrollEventThrottle={200}
+                        onContentSizeChange={
+                          () => {
+                            for(let i = 0; i < uData.length; i++){
+                              if(uData[i].selected) {
+                                if(i<6) {
+                                  var selectedContainer = 0;
+                                }
+                                else {
+                                  var selectedContainer = i*90;
+                                }
+                                break;
+                              }
+                            };
+                            console.log(selectedContainer);
+                            this.refs['scrollView'].scrollTo({y: selectedContainer, animated: true});    
+                          }
+                        }
+                      >
                         {Ranks}
                       </ScrollView>
                   </View>
@@ -1171,7 +1191,7 @@ const styles = StyleSheet.create({
     height: 70,
     width:960,
     margin: 15,
-    backgroundColor: "red",
+    //backgroundColor: "red",
     flexDirection: 'row'
   }, 
   modal5RankContainer:{
@@ -1179,29 +1199,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 500,
     margin: 3,
-    backgroundColor: "green",
+    //backgroundColor: "green",
   },
   modal5buttonContainer:{
     justifyContent: 'center',
     alignItems: 'center',
     height: 50,
     margin: 3,
-    backgroundColor: "blue",
+    //backgroundColor: "blue",
     flexDirection: 'row'
   },
   scrollView:{
     height:500,
+    width:960,
     flex:1,
-    backgroundColor: "red",
+    //backgroundColor: "red",
   },
   rankPlacesContainerSelected:{
     height: 90,
     width:960,
-    backgroundColor: "blue",
-    margin: 3,
+    //backgroundColor: "yellow",
     padding: 2,
     borderRadius:10,
-    borderWidth: 5,
+    borderWidth: 3,
     borderColor: '#E8843C',
     justifyContent: 'center',
     alignItems: 'center',
@@ -1210,8 +1230,7 @@ const styles = StyleSheet.create({
   rankPlacesContainer:{
     height: 90,
     width:960,
-    backgroundColor: "blue",
-    margin: 3,
+    //backgroundColor: "blue",
     padding: 2,
     justifyContent: 'center',
     alignItems: 'center',
@@ -1222,31 +1241,31 @@ const styles = StyleSheet.create({
     width:60,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "red",
+    //backgroundColor: "red",
   },
   rankCharacter:{
     height: 70,
     width:85,
-    backgroundColor: "orange",
+    //backgroundColor: "orange",
     justifyContent: 'center',
     alignItems: 'center'
   },
   rankPlaceholder:{
     height: 70,
     width:520,
-    backgroundColor: "yellow",
+    //backgroundColor: "yellow",
   },
   rankSprint:{
     height: 70,
     width:85,
-    backgroundColor: "green",
+    //backgroundColor: "green",
     justifyContent: 'center',
     alignItems: 'center'
   },
   rankMinute:{
     height: 70,
     width:190,
-    backgroundColor: "pink",
+    //backgroundColor: "pink",
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row'
