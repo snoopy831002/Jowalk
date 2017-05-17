@@ -33,6 +33,7 @@ export default class Jowalk039 extends Component {
    constructor(props) {
       super(props);
       this.calculateAverageSpeed = this.calculateAverageSpeed.bind(this);
+      this.modalTimeout = this.modalTimeout.bind(this);
       this.clear = this.clear.bind(this);
       this.onSave = this.onSave.bind(this);
       this.onUpdate = this.onUpdate.bind(this);
@@ -43,6 +44,7 @@ export default class Jowalk039 extends Component {
       this.handleOnMove=this.handleOnMove.bind(this);
       global.flag = false;
       global.Interval;
+      global.modalTimeoutInterval;
       global.onHandleMoveCounter=0;
       global.mapHeight = 0 ; 
       global.mapWidth = 0 ;
@@ -132,61 +134,13 @@ export default class Jowalk039 extends Component {
     this.setState({transparent: !this.state.transparent});
   };
 
-  pairingToggleStatus(){
-    this.setState({
-      status:!this.state.pairingVisibilityStatus
-    });
-  }
-
-  componentDidMount() {
-    //this.startAndRepeat();
-
-  }
-
-  startAndRepeat() {
-    //console.log('==start and repeat==');
-    //this.triggerAnimation();     
-  }
-
   triggerAnimation() {
-    /*
-    if(this.state.handloopState){
-      
-      //console.log('in hand loop state');
-      
-      Animated.sequence([
-          Animated.spring(this.state.pan, {
-            toValue: {x: 300, y: 80},
-            duration: 4000,    
-          }),
-          Animated.spring(this.state.pan, {
-            toValue: {x: 100, y: 70},
-            duration: 4000,    
-          })
-      ]).start(event => {
-      if (event.finished) {
-        if (this.state.handloopStateRepeat) {
-          this.triggerAnimation();       
-        };
-      }});
-    }
-    */
-    /*
-    Animated.timing(       // Uses easing functions
-            this.state.fadeAnim, // The value to drive
-            {
-              toValue: 0,        // Target
-              duration: 2000,    // Configuration
-            },
-          ).start();
-    */
      Animated.sequence([
           Animated.timing(fadeAnim, {
             toValue: 0,
             duration: 2000,    
           })
       ]).start();
-    //console.log("TA"); 
   }
 
   getStyle() {
@@ -208,6 +162,30 @@ export default class Jowalk039 extends Component {
   calculateAverageSpeed(time,distance){
     return distance/time;
   }
+
+
+modalTimeout(){
+      modalTimeoutInterval = setInterval(() => { 
+      console.log("time out running");
+      this.clear();
+      this.setState({ finishJourneyBtnVisibilityStatus : false});
+      this.setState({ slotVisibilityStatus : false});
+      this.setState({ chartVisibilityStatus : false});
+      this.setState({ CharacterVisibilityStatus : false});
+      this.setState({ RankVisibilityStatus : false});
+      this.setState({modalVisible: false});
+      distanceArr = [[]];
+      if(uData.length) {
+        for(let i = 0; i < uData.length; i++){
+          uData[i].selected = 0 ;
+        };                     
+      }
+      fadeAnim= new Animated.Value(1);
+      this.setState({ handloopState : 1 });
+      clearInterval(modalTimeoutInterval);
+    }, 1500);
+  }
+
   /**
    * The Sketch component provides a 'saveImage' function (promise),
    * so that you can save the drawing in the device and get an object
@@ -236,6 +214,8 @@ export default class Jowalk039 extends Component {
   }
 
   finishJourney() {
+    this.modalTimeout();
+    /*
     this.setState({ hide: true  });
     this.setState({ finishJourneyBtnVisibilityStatus : false});
       takeSnapshot(this.refs['full'], this.state.value)
@@ -266,14 +246,14 @@ export default class Jowalk039 extends Component {
         var displayConfirmInterval = setInterval(() => { 
           this.setState({ confirmVisibilityStatus: true });
           clearInterval(displayConfirmInterval);
-        }, 2000);
+        }, 3500);
       }
     }, 1500);
+*/
   }
 
   handlePressIn(e){
-    //this.setState({ handloopState: 0  });
-    //this.setState({ handloopStateRepeat: 0  });
+    console.log("in");
     this.triggerAnimation();
     coordinates.StartXcoordinate = e.nativeEvent.locationX ;
     coordinates.StartYcoordinate = e.nativeEvent.locationY ;
@@ -281,10 +261,12 @@ export default class Jowalk039 extends Component {
   }
 
   handlePressOut(){
+    console.log("out");
     clearInterval(Interval);
   }
 
   handleOnMove(e) {
+    console.log("move");
     if(flag == true) {
       coordinates.EndXcoordinate = e.nativeEvent.locationX;
       coordinates.EndYcoordinate = e.nativeEvent.locationY;
@@ -384,7 +366,7 @@ export default class Jowalk039 extends Component {
               {renderIf(this.state.pairingVisibilityStatus)(
                 <Animatable.View animation="zoomIn" style={styles.loading} ref="modal1">
                   <View style={styles.loadingUpper}>
-                    <Text style={{color: 'white',fontSize:15}}>正在配對路徑獎勵</Text>
+                    <Text style={{color: 'white',fontSize:20}}>正在配對路徑獎勵</Text>
                   </View>
                   <View style={styles.loadingLower}>
                     <Image 
@@ -413,8 +395,7 @@ export default class Jowalk039 extends Component {
                       <View style={[styles.modal2placeholder]}>   
                       </View> 
                       <View style={[styles.slotContainer]}>   
-                        <SlotMachine text={makeid()} padding='1' range="abcdefghijklm"
-                         />
+                        <SlotMachine text={makeid()} padding='1' range="abcdefghijklm" />
                       </View> 
                     </View> 
                     <View style={styles.modal2buttonContainer}>
@@ -423,14 +404,15 @@ export default class Jowalk039 extends Component {
                           onPressIn={()=>{this.setState({ confirmUri:require('./img/confirmHit.png')});}}
                           onPress={()=>{this.setState({ confirmUri:require('./img/confirm.png')});
                                         this.setState({ slotVisibilityStatus:false});
-                                        this.setState({ chartVisibilityStatus:true});}}>
+                                        this.setState({ chartVisibilityStatus:true});
+                                        clearInterval(modalTimeoutInterval);
+                                        this.modalTimeout;}}>
                           <View>
                             <Image 
                               style={{width:252,height:94}}
                               source={this.state.confirmUri}
                             />
                           </View>
-                        
                         </TouchableWithoutFeedback>
                       )}
                     </View> 
@@ -566,7 +548,9 @@ export default class Jowalk039 extends Component {
                         onPressIn={()=>{this.setState({ previousUri:require('./img/previousHit.png')});}}
                         onPress={()=>{this.setState({ previousUri:require('./img/previous.png')});
                                       this.setState({ slotVisibilityStatus:true});
-                                      this.setState({ chartVisibilityStatus:false});}}>
+                                      this.setState({ chartVisibilityStatus:false});
+                                      clearInterval(modalTimeoutInterval);
+                                      this.modalTimeout;}}>
                         <View>
                           <Image 
                             style={{width:252,height:94}}
@@ -578,7 +562,9 @@ export default class Jowalk039 extends Component {
                         onPressIn={()=>{this.setState({ nextUri:require('./img/nextHit.png')});}}
                         onPress={()=>{this.setState({ nextUri:require('./img/next.png')});
                                       this.setState({ CharacterVisibilityStatus:true});
-                                      this.setState({ chartVisibilityStatus:false});}}>
+                                      this.setState({ chartVisibilityStatus:false});
+                                      clearInterval(modalTimeoutInterval);
+                                      this.modalTimeout;}}>
                         <View>
                           <Image 
                             style={{width:252,height:94}}
@@ -640,7 +626,25 @@ export default class Jowalk039 extends Component {
                       </TouchableWithoutFeedback> 
                     </View> 
                   </View>
+                  <View style={styles.modal4PlaceholderContainer}>
+                    <Text style={{color:'#FFFFFF',fontSize:50}}></Text>
+                  </View>
                   <View style={styles.modal4buttonContainer}>
+                    <TouchableWithoutFeedback 
+                      style={{bottom:0}}
+                      onPressIn={()=>{this.setState({ confirmUri:require('./img/confirmHit.png')});}}
+                      onPress={()=>{this.setState({ confirmUri:require('./img/confirm.png')});
+                                    this.setState({ CharacterVisibilityStatus:false});
+                                    this.setState({ RankVisibilityStatus:true});
+                                    this.setState({ currentCharacter:require('./img/characters/char1.png')});
+                                    saveCurrentUserData("0",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2));}}>
+                      <View>
+                        <Image 
+                          style={{width:252,height:94}}
+                          source={this.state.confirmUri}
+                        />
+                      </View>    
+                    </TouchableWithoutFeedback>
                   </View>
                 </Animatable.View>
               )}  
@@ -669,7 +673,6 @@ export default class Jowalk039 extends Component {
                                 break;
                               }
                             };
-                            console.log(selectedContainer);
                             this.refs['scrollView'].scrollTo({y: selectedContainer, animated: true});    
                           }
                         }
@@ -692,8 +695,6 @@ export default class Jowalk039 extends Component {
                       this.setState({modalVisible: false});
                       this.setState({ handloopState: 1 });
                       fadeAnim=new Animated.Value(1);
-                      //this.setState({ handloopStateRepeat: 1 });
-                      //this.startAndRepeat();
                     }}>
                       <View>
                         <Image 
@@ -715,7 +716,7 @@ export default class Jowalk039 extends Component {
             onResponderRelease={this.handlePressOut}
             fillColor="#f5f5f5"
             strokeColor="#EC8E44"
-            strokeThickness={17}
+            strokeThickness={28}
             onReset={this.onReset}
             onUpdate={this.onUpdate}
             ref={(sketch) => { this.sketch = sketch; }}
@@ -869,7 +870,7 @@ function calculateTotalDistance(arr){
   arr.forEach(function (value) {
     totalDistance +=  value[1];
   });
-  return (totalDistance/30)*0.05;
+  return (totalDistance/30)*0.025;
 }
 
 function calculateCalories(time){
@@ -942,13 +943,13 @@ const styles = StyleSheet.create({
     height: 100,
   },
   loadingUpper: {
-    width: 150,
+    width: 250,
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
   },
    loadingLower: {
-    width: 150,
+    width: 250,
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
@@ -1160,6 +1161,14 @@ const styles = StyleSheet.create({
     //backgroundColor: "red",
     flexDirection: 'row'
   },
+  modal4PlaceholderContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 180,
+    margin: 3,
+    //backgroundColor: "red",
+    flexDirection: 'row'
+  },
   modal4CharacterContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -1169,13 +1178,18 @@ const styles = StyleSheet.create({
     //backgroundColor: "green",
     flexDirection: 'row'
   },
+  modal4Placeholder: {
+    justifyContent: 'center',
+    height: 50,
+    width: 800,
+    margin: 3,
+    //backgroundColor: "yellow",
+  },
   modal4buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 150,
-    margin: 3,
+    height: 100,
     //backgroundColor: "blue",
-    flexDirection: 'row'
   },
   modal4: {
     margin: 3,
