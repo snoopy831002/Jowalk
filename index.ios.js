@@ -183,7 +183,7 @@ modalTimeout(){
       fadeAnim= new Animated.Value(1);
       this.setState({ handloopState : 1 });
       clearInterval(modalTimeoutInterval);
-    }, 1500);
+    }, 15000);
   }
 
   /**
@@ -215,7 +215,6 @@ modalTimeout(){
 
   finishJourney() {
     this.modalTimeout();
-    /*
     this.setState({ hide: true  });
     this.setState({ finishJourneyBtnVisibilityStatus : false});
       takeSnapshot(this.refs['full'], this.state.value)
@@ -249,7 +248,6 @@ modalTimeout(){
         }, 3500);
       }
     }, 1500);
-*/
   }
 
   handlePressIn(e){
