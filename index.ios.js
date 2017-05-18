@@ -246,7 +246,6 @@ export default class Jowalk039 extends Component {
         }, 3700);
       }
     }, 2100);
-
   }
 
   handlePressIn(e){
