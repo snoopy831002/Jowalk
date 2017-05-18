@@ -54,7 +54,6 @@ export default class Jowalk039 extends Component {
       global.uData=new Array();
       global.charIcons=new Array();
       global.fadeAnim=new Animated.Value(1);
-      //global.selectedContainer = 0;
       charIcons = [  
       {image: require('./img/characters/char1.png')},
       {image: require('./img/characters/char2.png')},
@@ -163,9 +162,9 @@ export default class Jowalk039 extends Component {
     return distance/time;
   }
 
-modalTimeout(){
+  modalTimeout(aaa){
       modalTimeoutInterval = setInterval(() => { 
-      console.log("time out running");
+      console.log(aaa);
       this.clear();
       this.setState({ finishJourneyBtnVisibilityStatus : false});
       this.setState({ slotVisibilityStatus : false});
@@ -182,7 +181,7 @@ modalTimeout(){
       fadeAnim= new Animated.Value(1);
       this.setState({ handloopState : 1 });
       clearInterval(modalTimeoutInterval);
-    }, 12000);
+    }, 180000);
   }
 
   /**
@@ -213,7 +212,7 @@ modalTimeout(){
   }
 
   finishJourney() {
-    this.modalTimeout();
+    this.modalTimeout("finishJourney");
     takeSnapshot(this.refs['full'], this.state.value)
     .then(res => this.state.value.result !== "file" ? res : new Promise((success, failure) =>
           // just a test to ensure res can be used in Image.getSize
@@ -244,10 +243,9 @@ modalTimeout(){
         var displayConfirmInterval = setInterval(() => { 
           this.setState({ confirmVisibilityStatus: true });
           clearInterval(displayConfirmInterval);
-        }, 3500);
+        }, 3700);
       }
-    }, 1500);
-
+    }, 2100);
   }
 
   handlePressIn(e){
@@ -290,7 +288,7 @@ modalTimeout(){
     var activeButtonStyle = {
       backgroundColor: '#ddd'
     };
-    uData.sort(function(a,b) {return (a.speed < b.speed) ? 1 : ((b.speed < a.speed) ? -1 : 0);} );
+    uData.sort(function(a,b) {return (a.speed*100 < b.speed*100) ? 1 : ((b.speed*100 < a.speed*100) ? -1 : 0);} );
     var Ranks = [];
     for(let i = 0; i < uData.length; i++){
       if(uData[i].selected) {
@@ -404,7 +402,7 @@ modalTimeout(){
                                         this.setState({ slotVisibilityStatus:false});
                                         this.setState({ chartVisibilityStatus:true});
                                         clearInterval(modalTimeoutInterval);
-                                        this.modalTimeout();}}>
+                                        this.modalTimeout("modal2");}}>
                           <View>
                             <Image 
                               style={{width:252,height:94}}
@@ -548,7 +546,7 @@ modalTimeout(){
                                       this.setState({ slotVisibilityStatus:true});
                                       this.setState({ chartVisibilityStatus:false});
                                       clearInterval(modalTimeoutInterval);
-                                      this.modalTimeout();}}>
+                                      this.modalTimeout("modal3 previous");}}>
                         <View>
                           <Image 
                             style={{width:252,height:94}}
@@ -562,7 +560,7 @@ modalTimeout(){
                                       this.setState({ CharacterVisibilityStatus:true});
                                       this.setState({ chartVisibilityStatus:false});
                                       clearInterval(modalTimeoutInterval);
-                                      this.modalTimeout();}}>
+                                      this.modalTimeout("modal3 next");}}>
                         <View>
                           <Image 
                             style={{width:252,height:94}}
@@ -584,7 +582,9 @@ modalTimeout(){
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
                                           this.setState({ currentCharacter:require('./img/characters/char1.png')});
-                                          saveCurrentUserData("0",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>  
+                                          saveCurrentUserData("0",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))
+                                        clearInterval(modalTimeoutInterval);
+                                      this.modalTimeout("char1");}}>  
                           <Image 
                             source={require('./img/characters/char1.png')}
                           />
@@ -595,7 +595,9 @@ modalTimeout(){
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
                                           this.setState({ currentCharacter:require('./img/characters/char2.png')});
-                                          saveCurrentUserData("1",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>
+                                          saveCurrentUserData("1",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))
+                                        clearInterval(modalTimeoutInterval);
+                                      this.modalTimeout("char2");}}>
                           <Image 
                             source={require('./img/characters/char2.png')}
                           />
@@ -606,7 +608,9 @@ modalTimeout(){
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
                                           this.setState({ currentCharacter:require('./img/characters/char3.png')});
-                                          saveCurrentUserData("2",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}>  
+                                          saveCurrentUserData("2",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))
+                                        clearInterval(modalTimeoutInterval);
+                                      this.modalTimeout("char3");}}>  
                           <Image 
                             source={require('./img/characters/char3.png')}
                           />
@@ -617,7 +621,9 @@ modalTimeout(){
                         onPress={()=>{this.setState({ CharacterVisibilityStatus:false});
                                           this.setState({ RankVisibilityStatus:true});
                                           this.setState({ currentCharacter:require('./img/characters/char4.png')});
-                                          saveCurrentUserData("3",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))}}> 
+                                          saveCurrentUserData("3",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))
+                                        clearInterval(modalTimeoutInterval);
+                                      this.modalTimeout("char4");}}> 
                           <Image 
                             source={require('./img/characters/char4.png')}
                           />
@@ -635,7 +641,10 @@ modalTimeout(){
                                     this.setState({ CharacterVisibilityStatus:false});
                                     this.setState({ RankVisibilityStatus:true});
                                     this.setState({ currentCharacter:require('./img/characters/char1.png')});
-                                    saveCurrentUserData("0",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2));}}>
+                                    saveCurrentUserData("0",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2));
+                                    clearInterval(modalTimeoutInterval);
+                                      this.modalTimeout("auto chosed char");
+                                  }}>
                       <View>
                         <Image 
                           style={{width:252,height:94}}
@@ -662,7 +671,7 @@ modalTimeout(){
                           () => {
                             for(let i = 0; i < uData.length; i++){
                               if(uData[i].selected) {
-                                if(i<6) {
+                                if(i<5) {
                                   var selectedContainer = 0;
                                 }
                                 else {
@@ -693,6 +702,8 @@ modalTimeout(){
                       this.setState({modalVisible: false});
                       this.setState({ handloopState: 1 });
                       fadeAnim=new Animated.Value(1);
+                      clearInterval(modalTimeoutInterval);
+                      this.modalTimeout("char4");
                     }}>
                       <View>
                         <Image 
