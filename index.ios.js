@@ -103,10 +103,12 @@ export default class Jowalk039 extends Component {
     goForItImageShow:true
   };
 
+  /**
+  * Take screen shot of current screen
+  */
   snapshot = refname => () =>
     takeSnapshot(this.refs[refname], this.state.value)
     .then(res => this.state.value.result !== "file" ? res : new Promise((success, failure) =>
-          // just a test to ensure res can be used in Image.getSize
           Image.getSize(
             res,
             (width, height) => (console.log(res,width,height), success(res)),
@@ -133,11 +135,14 @@ export default class Jowalk039 extends Component {
     this.setState({transparent: !this.state.transparent});
   };
 
+  /**
+  * Trigger fadeout animation of hand.gif
+  */
   triggerAnimation() {
      Animated.sequence([
           Animated.timing(fadeAnim, {
             toValue: 0,
-            duration: 2000,    
+            duration: 800,    
           })
       ]).start();
   }
@@ -150,6 +155,7 @@ export default class Jowalk039 extends Component {
       }
     ];
   }
+
   /**
    * Clear / reset the drawing
    */
@@ -158,13 +164,18 @@ export default class Jowalk039 extends Component {
     this.setState({ encodedSignature: null });
   }
 
+  /**
+  * Calculate average speed of user's touch event
+  */
   calculateAverageSpeed(time,distance){
     return distance/time;
   }
 
-  modalTimeout(aaa){
+  /**
+  *  User will be directed to first page if user idle more than 3mins
+  */
+  modalTimeout(modal){
       modalTimeoutInterval = setInterval(() => { 
-      console.log(aaa);
       this.clear();
       this.setState({ finishJourneyBtnVisibilityStatus : false});
       this.setState({ slotVisibilityStatus : false});
@@ -182,7 +193,7 @@ export default class Jowalk039 extends Component {
       this.setState({ handloopState : 1 });
       clearInterval(modalTimeoutInterval);
       modalTimeoutInterval = false ;
-    }, 10000);
+    }, 180000);
   }
 
   /**
@@ -212,6 +223,9 @@ export default class Jowalk039 extends Component {
     return true;
   }
 
+  /**
+  * Do things after user finished drawing
+  */
   finishJourney() {
     this.modalTimeout("finishJourney");
     takeSnapshot(this.refs['full'], this.state.value)
@@ -249,12 +263,14 @@ export default class Jowalk039 extends Component {
     }, 2100);
   }
 
+  /**
+  * Handle sketch pressIn event
+  */
   handlePressIn(e){
-    console.log("in");
     this.triggerAnimation();
     coordinates.StartXcoordinate = e.nativeEvent.locationX ;
     coordinates.StartYcoordinate = e.nativeEvent.locationY ;
-    Interval = setInterval(() => { flag = true; }, 1000);
+    Interval = setInterval(() => { flag = true; }, 500);
     if(modalTimeoutInterval) {
       clearInterval(modalTimeoutInterval);
       modalTimeoutInterval = false ;
@@ -262,13 +278,17 @@ export default class Jowalk039 extends Component {
     
   }
 
+  /**
+  * Handle sketch pressOut event
+  */
   handlePressOut(){
-    console.log("out");
     clearInterval(Interval);
   }
 
+  /**
+  * Handle sketch Onmove event
+  */
   handleOnMove(e) {
-    console.log("move");
     if(flag == true) {
       coordinates.EndXcoordinate = e.nativeEvent.locationX;
       coordinates.EndYcoordinate = e.nativeEvent.locationY;
@@ -294,7 +314,6 @@ export default class Jowalk039 extends Component {
     var activeButtonStyle = {
       backgroundColor: '#ddd'
     };
-    uData.sort(function(a,b) {return (a.speed*100 < b.speed*100) ? 1 : ((b.speed*100 < a.speed*100) ? -1 : 0);} );
     var Ranks = [];
     for(let i = 0; i < uData.length; i++){
       if(uData[i].selected) {
@@ -740,7 +759,7 @@ export default class Jowalk039 extends Component {
             onResponderRelease={this.handlePressOut}
             fillColor="#f5f5f5"
             strokeColor="#EC8E44"
-            strokeThickness={28}
+            strokeThickness={41}
             onReset={this.onReset}
             onUpdate={this.onUpdate}
             ref={(sketch) => { this.sketch = sketch; }}
@@ -853,8 +872,8 @@ export default class Jowalk039 extends Component {
           {renderIf(this.state.handloopState)(
             <View style={styles.handGifContainer}>
               <Animated.Image 
-                style={{width:270,
-                        height:150,
+                style={{width:367.5,
+                        height:175,
                         opacity: fadeAnim
                       }}
                 source={require('./img/hand.gif')}
@@ -883,14 +902,23 @@ export default class Jowalk039 extends Component {
   }
 }
 
+/**
+* Calculate distance drawn by user on screen
+*/
 function calculateDistance(InX,OutX,InY,OutY){
   return Math.sqrt(Math.pow(OutX-InX,2)+Math.pow(InY-OutY,2));
 }
 
+/**
+* Calculate time drawn by user
+*/
 function calculateTotalTime(arr){
   return arr.length/60;
 }
 
+/**
+* Calculate actual distance drawn by user
+*/
 function calculateTotalDistance(arr){
   var totalDistance = 0;
   arr.forEach(function (value) {
@@ -899,22 +927,45 @@ function calculateTotalDistance(arr){
   return (totalDistance/30)*0.025;
 }
 
+/**
+* Calculate Calories drawn by user
+*/
 function calculateCalories(time){
   return time*7.5;
 }
 
+/**
+* Calculate total step drawn by user
+*/
 function calculateTotalSteps(distance){
   return distance*75;
 }
 
-function saveCurrentUserData(char,speed){
-  uData.push({'char':char,'speed':speed,'selected':1});
+/**
+* Save user data to array
+*/
+function saveCurrentUserData(char,speed) {
+  if(uData.length <= 19) {
+    uData.push({'char':char,'speed':speed,'selected':1});
+    uData.sort(function(a,b) {return (a.speed*100 < b.speed*100) ? 1 : ((b.speed*100 < a.speed*100) ? -1 : 0);} );
+  }
+  else if(uData.length == 20){
+    uData.pop();
+    uData.push({'char':char,'speed':speed,'selected':1});
+    uData.sort(function(a,b) {return (a.speed*100 < b.speed*100) ? 1 : ((b.speed*100 < a.speed*100) ? -1 : 0);} );
+  }
 }
 
+/**
+* modal2 screenshot placeholder
+*/
 const placeholder = {
   uri: './img/1.png',
 };
 
+/**
+* generate a random picture for the slot machine
+*/
 function makeid()
 {
     var text = "";
@@ -929,8 +980,8 @@ const styles = StyleSheet.create({
   handGifContainer: {
     position: 'absolute',
     width: 270,
-    top:200,
-    left:100,
+    top:371,
+    left:170,
     height: 150,
     zIndex: 1,
     justifyContent: 'center',
@@ -949,7 +1000,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     bottom: 20,
-    left: 390,
+    left: 420,
   },
   modalContainer: {
     flex: 1,
@@ -1105,27 +1156,27 @@ const styles = StyleSheet.create({
   },
   currentAverageSpeedNumValue:{
     height: 120,
-    width: 230,
+    width: 210,
     justifyContent: 'center',
     alignItems: 'center',
     //backgroundColor: "orange"
   },
   currentAverageSpeedNumValueCenter:{
-    height: 60,
-    width: 230,
+    height: 80,
+    width: 210,
     justifyContent: 'center',
     //backgroundColor: "pink"
   },
   currentAverageSpeedNumUnit:{
     height: 120,
-    width: 70,
+    width: 90,
     justifyContent: 'center',
     alignItems: 'center',
     //backgroundColor: "blue"
   },
   currentAverageSpeedNumUnitCenter:{
-    height: 60,
-    width: 70,
+    height: 80,
+    width: 90,
     justifyContent: 'center',
     //backgroundColor: "red"
   },
