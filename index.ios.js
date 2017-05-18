@@ -44,7 +44,7 @@ export default class Jowalk039 extends Component {
       this.handleOnMove=this.handleOnMove.bind(this);
       global.flag = false;
       global.Interval;
-      global.modalTimeoutInterval;
+      global.modalTimeoutInterval = false;
       global.onHandleMoveCounter=0;
       global.mapHeight = 0 ; 
       global.mapWidth = 0 ;
@@ -181,7 +181,8 @@ export default class Jowalk039 extends Component {
       fadeAnim= new Animated.Value(1);
       this.setState({ handloopState : 1 });
       clearInterval(modalTimeoutInterval);
-    }, 180000);
+      modalTimeoutInterval = false ;
+    }, 10000);
   }
 
   /**
@@ -254,6 +255,11 @@ export default class Jowalk039 extends Component {
     coordinates.StartXcoordinate = e.nativeEvent.locationX ;
     coordinates.StartYcoordinate = e.nativeEvent.locationY ;
     Interval = setInterval(() => { flag = true; }, 1000);
+    if(modalTimeoutInterval) {
+      clearInterval(modalTimeoutInterval);
+      modalTimeoutInterval = false ;
+    }
+    
   }
 
   handlePressOut(){
@@ -402,6 +408,7 @@ export default class Jowalk039 extends Component {
                                         this.setState({ slotVisibilityStatus:false});
                                         this.setState({ chartVisibilityStatus:true});
                                         clearInterval(modalTimeoutInterval);
+                                        modalTimeoutInterval = false ;
                                         this.modalTimeout("modal2");}}>
                           <View>
                             <Image 
@@ -546,6 +553,7 @@ export default class Jowalk039 extends Component {
                                       this.setState({ slotVisibilityStatus:true});
                                       this.setState({ chartVisibilityStatus:false});
                                       clearInterval(modalTimeoutInterval);
+                                      modalTimeoutInterval = false ;
                                       this.modalTimeout("modal3 previous");}}>
                         <View>
                           <Image 
@@ -560,6 +568,7 @@ export default class Jowalk039 extends Component {
                                       this.setState({ CharacterVisibilityStatus:true});
                                       this.setState({ chartVisibilityStatus:false});
                                       clearInterval(modalTimeoutInterval);
+                                      modalTimeoutInterval = false ;
                                       this.modalTimeout("modal3 next");}}>
                         <View>
                           <Image 
@@ -584,6 +593,7 @@ export default class Jowalk039 extends Component {
                                           this.setState({ currentCharacter:require('./img/characters/char1.png')});
                                           saveCurrentUserData("0",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))
                                         clearInterval(modalTimeoutInterval);
+                                        modalTimeoutInterval = false ;
                                       this.modalTimeout("char1");}}>  
                           <Image 
                             source={require('./img/characters/char1.png')}
@@ -597,6 +607,7 @@ export default class Jowalk039 extends Component {
                                           this.setState({ currentCharacter:require('./img/characters/char2.png')});
                                           saveCurrentUserData("1",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))
                                         clearInterval(modalTimeoutInterval);
+                                        modalTimeoutInterval = false ;
                                       this.modalTimeout("char2");}}>
                           <Image 
                             source={require('./img/characters/char2.png')}
@@ -610,6 +621,7 @@ export default class Jowalk039 extends Component {
                                           this.setState({ currentCharacter:require('./img/characters/char3.png')});
                                           saveCurrentUserData("2",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))
                                         clearInterval(modalTimeoutInterval);
+                                        modalTimeoutInterval = false ;
                                       this.modalTimeout("char3");}}>  
                           <Image 
                             source={require('./img/characters/char3.png')}
@@ -623,6 +635,7 @@ export default class Jowalk039 extends Component {
                                           this.setState({ currentCharacter:require('./img/characters/char4.png')});
                                           saveCurrentUserData("3",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2))
                                         clearInterval(modalTimeoutInterval);
+                                        modalTimeoutInterval = false ;
                                       this.modalTimeout("char4");}}> 
                           <Image 
                             source={require('./img/characters/char4.png')}
@@ -643,6 +656,7 @@ export default class Jowalk039 extends Component {
                                     this.setState({ currentCharacter:require('./img/characters/char1.png')});
                                     saveCurrentUserData("0",this.calculateAverageSpeed(this.state.totalTime,this.state.totalDistance).toFixed(2));
                                     clearInterval(modalTimeoutInterval);
+                                    modalTimeoutInterval = false ;
                                       this.modalTimeout("auto chosed char");
                                   }}>
                       <View>
@@ -703,7 +717,8 @@ export default class Jowalk039 extends Component {
                       this.setState({ handloopState: 1 });
                       fadeAnim=new Animated.Value(1);
                       clearInterval(modalTimeoutInterval);
-                      this.modalTimeout("char4");
+                      modalTimeoutInterval = false ;
+                      this.modalTimeout("modal5");
                     }}>
                       <View>
                         <Image 
