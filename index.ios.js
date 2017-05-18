@@ -163,7 +163,6 @@ export default class Jowalk039 extends Component {
     return distance/time;
   }
 
-
 modalTimeout(){
       modalTimeoutInterval = setInterval(() => { 
       console.log("time out running");
@@ -183,7 +182,7 @@ modalTimeout(){
       fadeAnim= new Animated.Value(1);
       this.setState({ handloopState : 1 });
       clearInterval(modalTimeoutInterval);
-    }, 15000);
+    }, 12000);
   }
 
   /**
@@ -215,26 +214,26 @@ modalTimeout(){
 
   finishJourney() {
     this.modalTimeout();
-    this.setState({ hide: true  });
-    this.setState({ finishJourneyBtnVisibilityStatus : false});
-      takeSnapshot(this.refs['full'], this.state.value)
-      .then(res => this.state.value.result !== "file" ? res : new Promise((success, failure) =>
-            // just a test to ensure res can be used in Image.getSize
-            Image.getSize(
-              res,
-              (width, height) => (console.log('uri='+res,width,height), success(res)),
-              failure)))
-            .then(res => this.setState({
-              error: null,
-              res,
-              screenShotSource: { uri:
-                this.state.value.result === "base64"
-                ? "data:image/"+this.state.value.format+";base64,"+res
-                : res }
-            })).catch(error => (console.warn(error), this.setState({ error, res: null, screenShotSource: null })));
+    takeSnapshot(this.refs['full'], this.state.value)
+    .then(res => this.state.value.result !== "file" ? res : new Promise((success, failure) =>
+          // just a test to ensure res can be used in Image.getSize
+          Image.getSize(
+            res,
+            (width, height) => (console.log('uri='+res,width,height), success(res)),
+            failure)))
+          .then(res => this.setState({
+            error: null,
+            res,
+            screenShotSource: { uri:
+              this.state.value.result === "base64"
+              ? "data:image/"+this.state.value.format+";base64,"+res
+              : res }
+          })).catch(error => (console.warn(error), this.setState({ error, res: null, screenShotSource: null })));
     this.setState({modalVisible: true});
+   
     var finishJourneyInterval = setInterval(() => { 
       if(!this.state.error){
+        this.setState({ finishJourneyBtnVisibilityStatus : false});
         this.setState({ totalDistance: calculateTotalDistance(distanceArr[0]) });
         this.setState({ totalTime: calculateTotalTime(distanceArr[0]) });
         this.setState({ totalSteps: calculateTotalSteps(this.state.totalDistance) });
@@ -248,6 +247,7 @@ modalTimeout(){
         }, 3500);
       }
     }, 1500);
+
   }
 
   handlePressIn(e){
@@ -404,7 +404,7 @@ modalTimeout(){
                                         this.setState({ slotVisibilityStatus:false});
                                         this.setState({ chartVisibilityStatus:true});
                                         clearInterval(modalTimeoutInterval);
-                                        this.modalTimeout;}}>
+                                        this.modalTimeout();}}>
                           <View>
                             <Image 
                               style={{width:252,height:94}}
@@ -548,7 +548,7 @@ modalTimeout(){
                                       this.setState({ slotVisibilityStatus:true});
                                       this.setState({ chartVisibilityStatus:false});
                                       clearInterval(modalTimeoutInterval);
-                                      this.modalTimeout;}}>
+                                      this.modalTimeout();}}>
                         <View>
                           <Image 
                             style={{width:252,height:94}}
@@ -562,7 +562,7 @@ modalTimeout(){
                                       this.setState({ CharacterVisibilityStatus:true});
                                       this.setState({ chartVisibilityStatus:false});
                                       clearInterval(modalTimeoutInterval);
-                                      this.modalTimeout;}}>
+                                      this.modalTimeout();}}>
                         <View>
                           <Image 
                             style={{width:252,height:94}}
@@ -839,7 +839,9 @@ modalTimeout(){
         {renderIf(this.state.finishJourneyBtnVisibilityStatus)(
           <View style={styles.addButton}>
             <TouchableWithoutFeedback 
-              onPressIn={this.finishJourney}
+              onPressIn={()=>{
+                this.finishJourney();
+                }}
               onPress={()=>{this.setState({  finishJourneyUri:require('./img/finishJourney.png')});}}>
                 <View>
                   <Image 
