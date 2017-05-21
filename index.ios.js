@@ -941,6 +941,7 @@ function calculateCalories(time){
 * Minute to hour exchanger
 */
 function min2Hour(time){
+  time = 5*time;
   return (time<10) ? ("00 ' 0"+(time)+' " ') : (time<60) ?  ("00 ' "+(time)+'"') :  ((time/60).toFixed()+" ' "+(time%60)+' " ') ; 
 }
 
