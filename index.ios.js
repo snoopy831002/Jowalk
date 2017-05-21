@@ -498,7 +498,7 @@ export default class Jowalk039 extends Component {
                         dataPointFillColor={['rgba(0,0,0,0)']}
                         dataPointColor={['rgba(0,0,0,0)']}
                         xAxisHeight={50}
-                        showXAxisLabels={true}
+                        showXAxisLabels={false}
                         type="line"
                       />
                     </View>
@@ -512,8 +512,11 @@ export default class Jowalk039 extends Component {
                             source={require('./img/time.png')}
                           />
                       </View>
-                      <View style={{width:120,height:100,justifyContent:'center',alignItems:'center'}}>
-                        <Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{(this.state.totalTime)*60}</Text>
+                      <View style={{width:100,height:100,justifyContent:'center',alignItems:'center'}}>
+                        <Text style={{color:'#FFFFFF',fontSize:20,textAlign: 'center'}}>{min2Hour((this.state.totalTime)*60)}</Text>
+                      </View>
+                      <View style={{width:50,height:100,justifyContent: 'center',paddingTop: 6}}>
+                          <Text style={{color:'#FFFFFF',fontSize:10,textAlign: 'left'}}>{'分鐘'}</Text>
                       </View>
                     </View>
                     <View style={{width:220,height:100,flexDirection:'row',justifyContent: 'center'}}>
@@ -759,7 +762,7 @@ export default class Jowalk039 extends Component {
             onResponderRelease={this.handlePressOut}
             fillColor="#f5f5f5"
             strokeColor="#EC8E44"
-            strokeThickness={41}
+            strokeThickness={30}
             onReset={this.onReset}
             onUpdate={this.onUpdate}
             ref={(sketch) => { this.sketch = sketch; }}
@@ -933,6 +936,14 @@ function calculateTotalDistance(arr){
 function calculateCalories(time){
   return time*7.5;
 }
+
+/**
+* Minute to hour exchanger
+*/
+function min2Hour(time){
+  return (time<10) ? ("00 ' 0"+(time)+' " ') : (time<60) ?  ("00 ' "+(time)+'"') :  ((time/60).toFixed()+" ' "+(time%60)+' " ') ; 
+}
+
 
 /**
 * Calculate total step drawn by user
